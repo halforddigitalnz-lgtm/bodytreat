@@ -3,3 +3,5 @@ temporary screenshots/
 *.DS_Store
 node_modules/
 banner-video-03-06-26.mp4
+.env.local
+.env

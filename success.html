@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uplifting Blend — Bodytreat</title>
+  <title>Order Confirmed — Bodytreat</title>
   <link rel="icon" href="images/logo/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,15 +12,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --white: #FFFCFB; --linen: #FEF7F4; --blush: #F8EDE8; --rose: #C4897A; --rose-dark: #A86D5F; --rose-pale: #EAC5BB; --bark: #2C1A14; --earth: #3D2218; --mist: #7A5850; --border: #E8D4CE; }
     html { scroll-behavior: smooth; }
-    body { background: var(--linen); color: var(--bark); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; }
+    body { background: var(--linen); color: var(--bark); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 14px 56px; display: flex; align-items: center; justify-content: space-between; background: rgba(254,252,251,0.94); backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(196,137,122,0.06); }
     .nav-logo { height: 48px; transition: opacity 0.3s ease; } .nav-logo:hover { opacity: 0.8; }
     .nav-links { display: flex; gap: 36px; list-style: none; }
     .nav-links a { font-size: 12px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--earth); text-decoration: none; transition: color 0.3s ease; position: relative; }
     .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; right: 0; height: 1px; background: var(--rose); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
-    .nav-links a:hover, .nav-links a.active { color: var(--rose-dark); }
-    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-links a:hover { color: var(--rose-dark); } .nav-links a:hover::after { transform: scaleX(1); }
     .nav-cta { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); background: var(--rose); padding: 10px 24px; text-decoration: none; border-radius: 1px; transition: background 0.3s ease; }
     .nav-cta:hover { background: var(--rose-dark); }
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
@@ -32,26 +31,61 @@
     .mobile-menu.open { display: flex; }
     .mobile-menu a { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; font-style: italic; color: var(--bark); text-decoration: none; transition: color 0.3s ease; }
     .mobile-menu a:hover { color: var(--rose); }
-    .product-detail { padding-top: 76px; min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
-    .product-images { position: sticky; top: 76px; height: calc(100vh - 76px); background: var(--blush); overflow: hidden; }
-    .product-images img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-    .product-panel { padding: 72px 72px 96px; overflow-y: auto; background: var(--linen); }
-    .product-back { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); text-decoration: none; margin-bottom: 52px; transition: color 0.3s ease; }
-    .product-back:hover { color: var(--rose); }
-    .product-category { font-size: 11px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase; color: var(--rose); margin-bottom: 16px; display: block; }
-    .product-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 3.5vw, 52px); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; color: var(--bark); margin-bottom: 16px; }
-    .product-price-large { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--mist); margin-bottom: 32px; }
-    .product-tagline { font-size: 16px; font-weight: 300; line-height: 1.8; color: var(--earth); margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); font-style: italic; }
-    .product-section-label { font-size: 10px; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: var(--mist); margin-bottom: 10px; display: block; }
-    .product-body { font-size: 15px; font-weight: 300; line-height: 1.85; color: var(--earth); margin-bottom: 32px; }
-    .product-divider { width: 32px; height: 1px; background: var(--rose-pale); margin: 28px 0; }
-    .product-ingredients-text { font-size: 13px; font-weight: 300; line-height: 1.8; color: var(--mist); margin-bottom: 32px; }
-    .product-meta-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 40px; }
-    .product-meta-tag { font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--earth); background: var(--blush); border: 1px solid var(--border); padding: 6px 14px; }
-    .product-buy-btn { display: block; background: var(--bark); color: var(--white); font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; padding: 18px 40px; text-align: center; transition: background 0.3s ease, transform 0.2s ease; margin-bottom: 14px; }
-    .product-buy-btn:hover { background: var(--earth); transform: translateY(-1px); }
-    .product-note { font-size: 12px; font-weight: 300; color: var(--mist); text-align: center; letter-spacing: 0.04em; }
-    footer { background: var(--bark); padding: 68px 80px 44px; }
+
+    .success-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px 24px 80px;
+    }
+    .success-icon {
+      width: 64px; height: 64px;
+      border: 1.5px solid var(--rose-pale);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 32px;
+      color: var(--rose);
+    }
+    .success-label {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 18px; display: block;
+    }
+    .success-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 54px);
+      font-weight: 300; line-height: 1.1; letter-spacing: -0.02em;
+      color: var(--bark); margin-bottom: 22px;
+    }
+    .success-body {
+      font-size: 15px; font-weight: 300; line-height: 1.85; color: var(--mist);
+      max-width: 460px; margin: 0 auto 12px;
+    }
+    .success-note {
+      font-size: 13px; font-weight: 300; color: var(--rose-pale);
+      margin-bottom: 48px;
+    }
+    .success-divider { width: 32px; height: 1px; background: var(--rose-pale); margin: 0 auto 48px; }
+    .success-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: var(--bark); color: var(--white);
+      font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;
+      padding: 16px 32px; transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover { background: var(--earth); transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent; color: var(--mist);
+      font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;
+      padding: 16px 32px; border: 1px solid var(--border);
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    .btn-ghost:hover { border-color: var(--rose-pale); color: var(--rose); }
+
+    footer { background: var(--bark); padding: 68px 80px 44px; margin-top: auto; }
     .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 56px; padding-bottom: 52px; border-bottom: 1px solid rgba(255,252,251,0.08); }
     .footer-logo { height: 48px; margin-bottom: 18px; filter: brightness(0) invert(1); opacity: 0.85; }
     .footer-tagline { font-size: 13px; font-weight: 300; line-height: 1.8; color: rgba(255,252,251,0.45); margin-bottom: 22px; }
@@ -66,9 +100,8 @@
     .footer-bottom { padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
     .footer-copy { font-size: 12px; font-weight: 300; color: rgba(255,252,251,0.22); }
     .footer-nz { display: flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,252,251,0.22); }
-    @media (max-width: 900px) { .product-detail { grid-template-columns: 1fr; } .product-images { position: relative; top: 0; height: 70vw; max-height: 520px; } .product-panel { padding: 48px 32px 72px; } }
-    @media (max-width: 768px) { nav { padding: 14px 24px; } .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .product-panel { padding: 40px 20px 64px; } .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; } footer { padding: 48px 24px 32px; } .footer-bottom { flex-direction: column; gap: 10px; text-align: center; } }
-    @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { nav { padding: 14px 24px; } .nav-links, .nav-cta { display: none; } .hamburger { display: flex; } .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; } footer { padding: 48px 24px 32px; } .footer-bottom { flex-direction: column; gap: 10px; text-align: center; } }
+    @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } .success-actions { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -81,7 +114,7 @@
   <nav>
     <a href="index.html"><img src="images/logo/logo-default.png" alt="Bodytreat" class="nav-logo"></a>
     <ul class="nav-links">
-      <li><a href="products.html" class="active">Shop</a></li>
+      <li><a href="products.html">Shop</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="about.html#wholesale">Wholesale</a></li>
       <li><a href="stockists.html">Stockists</a></li>
@@ -89,33 +122,22 @@
     <a href="products.html" class="nav-cta">Shop Now</a>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </nav>
-  <div class="product-detail">
-    <div class="product-images">
-      <img src="images/products/BT-uplifting.jpg" alt="Uplifting Blend">
+
+  <div class="success-wrap">
+    <div class="success-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <div class="product-panel">
-      <a href="products.html" class="product-back">← Back to shop</a>
-      <span class="product-category">Body Oil Blend — 100ml</span>
-      <h1 class="product-title">Uplifting Blend</h1>
-      <p class="product-price-large">$44.99 NZD</p>
-      <p class="product-tagline">Delight the senses with this divine blend of Sandalwood, Jasmine, Rose, Pink Grapefruit and Tangerine.</p>
-      <span class="product-section-label">About this blend</span>
-      <p class="product-body">A joyful, mood-lifting blend that awakens the senses and brings lightness to any moment. The bright, sparkling citrus of Pink Grapefruit and Tangerine is grounded by the rich, creamy depth of Australian Sandalwood and softened by Jasmine and Rose. Beautiful aromas that truly come alive once massaged into the skin.</p>
-      <span class="product-section-label">How to use</span>
-      <p class="product-body">Apply generously to skin and massage in slowly. Use any time of day — morning after a shower, or mid-afternoon to lift your energy. Can also be used as a nourishing daily skin treatment. Store in a cool place out of direct sunlight. External use only.</p>
-      <div class="product-divider"></div>
-      <span class="product-section-label">Full ingredients</span>
-      <p class="product-ingredients-text">Sweet Almond Oil, Grapeseed Oil, Macadamia Oil, essential oils of Jasmine (Jasmine officinale), Pink Grapefruit (Citrus paradisi), Australian Sandalwood (Santalum spicatum), Tangerine (Citrus reticulata var. tangerine), Rose (Rosa damascena absolute) in Jojoba Oil, Vitamin E (natural mixed tocopherols)</p>
-      <div class="product-meta-row">
-        <span class="product-meta-tag">100ml</span>
-        <span class="product-meta-tag">NZ Made</span>
-        <span class="product-meta-tag">No parabens</span>
-        <span class="product-meta-tag">All natural</span>
-      </div>
-      <button class="product-buy-btn" data-slug="uplifting" data-name="Uplifting Blend" data-price="44.99" data-image="/images/products/BT-uplifting.jpg" onclick="addToCart(this)">Add to Cart</button>
-      <p class="product-note">Free shipping throughout New Zealand</p>
+    <span class="success-label">Order Confirmed</span>
+    <h1 class="success-title">Thank you for<br><em style="font-style:italic">your order</em></h1>
+    <p class="success-body">Your Bodytreat products are on their way. You'll receive an email confirmation shortly with your order details and tracking information once dispatched.</p>
+    <p class="success-note">Please allow 2–3 business days for dispatch.</p>
+    <div class="success-divider"></div>
+    <div class="success-actions">
+      <a href="products.html" class="btn-primary">Continue Shopping</a>
+      <a href="contact.html" class="btn-ghost">Get in Touch</a>
     </div>
   </div>
+
   <footer>
     <div class="footer-top">
       <div>
@@ -135,7 +157,10 @@
       <div class="footer-nz"><span>🇳🇿</span><span>Made in New Zealand</span></div>
     </div>
   </footer>
+
   <script>
+    // Clear cart on successful order — runs before cart.js DOMContentLoaded so badge shows 0
+    localStorage.removeItem('bodytreat_cart');
     function toggleMenu() { document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
     function closeMenu() { document.getElementById('hamburger').classList.remove('open'); document.getElementById('mobileMenu').classList.remove('open'); }
   </script>

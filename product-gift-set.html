@@ -135,7 +135,7 @@
         <span class="product-meta-tag">Limited Edition</span>
         <span class="product-meta-tag">No parabens</span>
       </div>
-      <a href="#" class="product-buy-btn" data-stripe="gift-set">Purchase — $120.00</a>
+      <button class="product-buy-btn" data-slug="gift-set" data-name="Country Blooms × Bodytreat Gift Set" data-price="120.00" data-image="/images/products/CB-BT-001.jpg" onclick="addToCart(this)">Add to Cart</button>
       <p class="product-note">Free shipping throughout New Zealand</p>
     </div>
   </div>
@@ -171,5 +171,6 @@
     }
     setInterval(() => goSlide((current + 1) % 3), 3500);
   </script>
+  <script src="/cart.js"></script>
 </body>
 </html>
