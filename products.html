@@ -181,7 +181,8 @@
       margin-bottom: 72px;
     }
     .product-grid--half {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 380px));
+      justify-content: start;
     }
 
     .product-card {
@@ -204,15 +205,26 @@
     .product-image-wrap img {
       width: 100%; height: 100%;
       object-fit: cover; object-position: center;
-      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
     }
     .product-card:hover .product-image-wrap img { transform: scale(1.04); }
+
+    /* Hover image swap */
+    .product-image-wrap .img-hover {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .product-card:hover .product-image-wrap .img-hover { opacity: 1; }
+    .product-card:hover .product-image-wrap .img-primary { opacity: 0; }
 
     .product-badge {
       position: absolute; top: 12px; left: 12px;
       background: var(--rose); color: var(--white);
       font-size: 9px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
-      padding: 4px 9px;
+      padding: 4px 9px; z-index: 2;
     }
 
     .product-info { padding: 0; }
@@ -237,7 +249,7 @@
     }
     .product-card:hover .product-link { opacity: 1; transform: translateX(0); }
 
-    /* GIFT CARD */
+    /* GIFT CARD SLIDESHOW */
     .gift-card {
       grid-column: 1 / -1;
       position: relative;
@@ -249,18 +261,24 @@
       transition: transform 0.4s ease;
     }
     .gift-card:hover { transform: translateY(-3px); }
-    .gift-card img {
+    .gift-slide {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+    .gift-slide.active { opacity: 1; }
+    .gift-slide img {
       width: 100%; height: 100%;
       object-fit: cover; object-position: center 20%;
-      transition: transform 0.6s ease;
     }
-    .gift-card:hover img { transform: scale(1.03); }
     .gift-card-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(to right, rgba(44,26,20,0.72) 0%, rgba(44,26,20,0.2) 60%, transparent 100%);
       display: flex; flex-direction: column; justify-content: center;
       padding: 48px 56px;
       gap: 14px;
+      z-index: 2;
     }
     .gift-eyebrow {
       font-size: 10px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase;
@@ -286,6 +304,16 @@
       border-bottom: 1px solid rgba(255,252,251,0.3);
       padding-bottom: 2px;
     }
+    .gift-dots {
+      position: absolute; bottom: 18px; left: 56px;
+      display: flex; gap: 7px; z-index: 3;
+    }
+    .gift-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,252,251,0.35);
+      transition: background 0.4s ease;
+    }
+    .gift-dot.active { background: rgba(255,252,251,0.85); }
 
     /* FOOTER */
     footer { background: var(--bark); padding: 68px 80px 44px; }
@@ -329,6 +357,7 @@
       .product-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
       .gift-card { aspect-ratio: 4 / 3; }
       .gift-card-overlay { padding: 28px 32px; }
+      .gift-dots { left: 32px; }
       .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; padding-bottom: 40px; }
       footer { padding: 48px 24px 32px; }
       .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
@@ -382,46 +411,58 @@
       <h2>Body Oil Blends</h2>
     </div>
     <div class="product-grid">
-      <a href="#" class="product-card reveal" data-stripe="aches-pains">
-        <div class="product-image-wrap"><img src="images/products/P1010201.jpg" alt="Aches &amp; Pains Blend"></div>
+      <a href="product-aches-pains.html" class="product-card reveal" data-stripe="aches-pains">
+        <div class="product-image-wrap">
+          <img class="img-primary" src="images/products/BT-aches-pains.jpg" alt="Aches &amp; Pains Blend">
+        </div>
         <div class="product-info">
           <h3 class="product-name">Aches &amp; Pains Blend</h3>
-          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">View →</span></div>
         </div>
       </a>
-      <a href="#" class="product-card reveal reveal-delay-1" data-stripe="calm-relax">
-        <div class="product-image-wrap"><img src="images/products/P1010224.jpg" alt="Calm &amp; Relax Blend"></div>
+      <a href="product-calm-relax.html" class="product-card reveal reveal-delay-1" data-stripe="calm-relax">
+        <div class="product-image-wrap">
+          <img class="img-primary" src="images/products/BT-calm-and-relax.jpg" alt="Calm &amp; Relax Blend">
+        </div>
         <div class="product-info">
           <h3 class="product-name">Calm &amp; Relax Blend</h3>
-          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">View →</span></div>
         </div>
       </a>
-      <a href="#" class="product-card reveal reveal-delay-2" data-stripe="dry-skin">
-        <div class="product-image-wrap"><img src="images/products/P1010221.jpg" alt="Dry Skin Nourish"></div>
+      <a href="product-dry-skin.html" class="product-card reveal reveal-delay-2" data-stripe="dry-skin">
+        <div class="product-image-wrap">
+          <img class="img-primary" src="images/products/BT-dryskin.jpg" alt="Dry Skin Nourish">
+        </div>
         <div class="product-info">
           <h3 class="product-name">Dry Skin Nourish</h3>
-          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">View →</span></div>
         </div>
       </a>
-      <a href="#" class="product-card reveal reveal-delay-3" data-stripe="soothe-sleep">
-        <div class="product-image-wrap"><img src="images/products/P1010208.jpg" alt="Soothe &amp; Sleep Blend"></div>
+      <a href="product-soothe-sleep.html" class="product-card reveal reveal-delay-3" data-stripe="soothe-sleep">
+        <div class="product-image-wrap">
+          <img class="img-primary" src="images/products/BT-soothe.jpg" alt="Soothe &amp; Sleep Blend">
+        </div>
         <div class="product-info">
           <h3 class="product-name">Soothe &amp; Sleep Blend</h3>
-          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">View →</span></div>
         </div>
       </a>
-      <a href="#" class="product-card reveal" data-stripe="uplifting">
-        <div class="product-image-wrap"><img src="images/products/P1010217.jpg" alt="Uplifting Blend"></div>
+      <a href="product-uplifting.html" class="product-card reveal" data-stripe="uplifting">
+        <div class="product-image-wrap">
+          <img class="img-primary" src="images/products/BT-uplifting.jpg" alt="Uplifting Blend">
+        </div>
         <div class="product-info">
           <h3 class="product-name">Uplifting Blend</h3>
-          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">View →</span></div>
         </div>
       </a>
-      <a href="#" class="product-card reveal reveal-delay-1" data-stripe="womens-hormone">
-        <div class="product-image-wrap"><img src="images/products/P1010198.jpg" alt="Womens' Hormone Blend"></div>
+      <a href="product-womens-hormone.html" class="product-card reveal reveal-delay-1" data-stripe="womens-hormone">
+        <div class="product-image-wrap">
+          <img class="img-primary" src="images/products/BT-womens.jpg" alt="Womens' Hormone Blend">
+        </div>
         <div class="product-info">
           <h3 class="product-name">Womens' Hormone Blend</h3>
-          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">View →</span></div>
         </div>
       </a>
     </div>
@@ -431,14 +472,15 @@
       <h2>Face Oil</h2>
     </div>
     <div class="product-grid product-grid--half">
-      <a href="#" class="product-card reveal" id="bio-retinol" data-stripe="bio-retinol">
+      <a href="product-bio-retinol.html" class="product-card reveal" id="bio-retinol" data-stripe="bio-retinol">
         <div class="product-image-wrap">
-          <img src="images/products/005.jpg" alt="Bio-Retinol Face Oil">
+          <img class="img-primary" src="images/products/BT-bioretinol-001.jpg" alt="Bio-Retinol Face Oil">
+          <img class="img-hover" src="images/products/BT-bioretinol-002..jpg" alt="Bio-Retinol Face Oil alternate view">
           <div class="product-badge">Bestseller</div>
         </div>
         <div class="product-info">
           <h3 class="product-name">Bio-Retinol Firm &amp; Smooth Face Oil</h3>
-          <div class="product-footer"><span class="product-price">$47.00</span><span class="product-link">Shop →</span></div>
+          <div class="product-footer"><span class="product-price">$47.00</span><span class="product-link">View →</span></div>
         </div>
       </a>
     </div>
@@ -448,15 +490,22 @@
       <h2>Gift Sets</h2>
     </div>
     <div class="product-grid">
-      <a href="#" class="gift-card reveal" id="gift-set" data-stripe="gift-set">
-        <img src="images/products/IMG_0902.jpg" alt="Bodytreat collection">
+      <a href="product-gift-set.html" class="gift-card reveal" id="gift-set" data-stripe="gift-set">
+        <div class="gift-slide active" id="gslide-0"><img src="images/products/CB-BT-001.jpg" alt="Country Blooms Bodytreat Gift Set"></div>
+        <div class="gift-slide" id="gslide-1"><img src="images/products/CB-BT-002.jpg" alt="Country Blooms Bodytreat Gift Set"></div>
+        <div class="gift-slide" id="gslide-2"><img src="images/products/CB-BT-003.jpg" alt="Country Blooms Bodytreat Gift Set"></div>
         <div class="gift-card-overlay">
           <span class="gift-eyebrow">Country Blooms × Bodytreat</span>
           <h3 class="gift-title"><em>Gift Set</em></h3>
           <div class="gift-footer">
             <span class="gift-price">$120.00</span>
-            <span class="gift-cta">Shop →</span>
+            <span class="gift-cta">View →</span>
           </div>
+        </div>
+        <div class="gift-dots">
+          <span class="gift-dot active" id="gdot-0"></span>
+          <span class="gift-dot" id="gdot-1"></span>
+          <span class="gift-dot" id="gdot-2"></span>
         </div>
       </a>
     </div>
@@ -469,17 +518,17 @@
         <img src="images/logo/logo-default.png" alt="Bodytreat" class="footer-logo">
         <p class="footer-tagline">Handcrafted aromatherapy body oils made with love in the Tasman region, New Zealand.</p>
         <div class="footer-social">
-          <a href="#" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-          <a href="#" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <a href="https://www.instagram.com/lovebodytreat/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="https://www.facebook.com/mahanaspawear" target="_blank" rel="noopener" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
         </div>
       </div>
       <div>
         <p class="footer-col-title">Shop</p>
         <ul class="footer-links">
           <li><a href="products.html">All Products</a></li>
-          <li><a href="products.html#bio-retinol">Bio-Retinol Face Oil</a></li>
+          <li><a href="product-bio-retinol.html">Bio-Retinol Face Oil</a></li>
           <li><a href="products.html">Body Oil Blends</a></li>
-          <li><a href="products.html#gift-set">Gift Sets</a></li>
+          <li><a href="product-gift-set.html">Gift Sets</a></li>
         </ul>
       </div>
       <div>
@@ -493,9 +542,9 @@
       <div>
         <p class="footer-col-title">Help</p>
         <ul class="footer-links">
-          <li><a href="#">Shipping &amp; Returns</a></li>
-          <li><a href="#">Terms &amp; Policies</a></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><a href="shipping.html">Shipping &amp; Returns</a></li>
+          <li><a href="terms.html">Terms &amp; Policies</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
         </ul>
       </div>
     </div>
@@ -517,6 +566,18 @@
     }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(el => observer.observe(el));
     setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 1200);
+
+    // Gift set slideshow
+    let gCurrent = 0;
+    const gTotal = 3;
+    function advanceGift() {
+      document.getElementById('gslide-' + gCurrent).classList.remove('active');
+      document.getElementById('gdot-' + gCurrent).classList.remove('active');
+      gCurrent = (gCurrent + 1) % gTotal;
+      document.getElementById('gslide-' + gCurrent).classList.add('active');
+      document.getElementById('gdot-' + gCurrent).classList.add('active');
+    }
+    setInterval(advanceGift, 3500);
   </script>
 </body>
 </html>
