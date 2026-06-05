@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stockists — Bodytreat</title>
+  <link rel="icon" href="images/logo/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:      #FFFCFB;
+      --linen:      #FEF7F4;
+      --blush:      #F8EDE8;
+      --petal:      #EEDDD6;
+      --rose:       #C4897A;
+      --rose-dark:  #A86D5F;
+      --rose-pale:  #EAC5BB;
+      --gold:       #B8924A;
+      --bark:       #2C1A14;
+      --earth:      #3D2218;
+      --mist:       #7A5850;
+      --border:     #E8D4CE;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--linen);
+      color: var(--bark);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(254,252,251,0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(196,137,122,0.06);
+    }
+    .nav-logo { height: 48px; transition: opacity 0.3s ease; }
+    .nav-logo:hover { opacity: 0.8; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 12px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--earth); text-decoration: none; transition: color 0.3s ease; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: var(--rose);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--rose-dark); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-cta {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); background: var(--rose); padding: 10px 24px;
+      text-decoration: none; border-radius: 1px; transition: background 0.3s ease;
+    }
+    .nav-cta:hover { background: var(--rose-dark); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; background: none; border: none;
+    }
+    .hamburger span { display: block; width: 24px; height: 1px; background: var(--bark); transition: transform 0.3s ease, opacity 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; background: var(--white);
+      z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; font-style: italic;
+      color: var(--bark); text-decoration: none; transition: color 0.3s ease;
+    }
+    .mobile-menu a:hover { color: var(--rose); }
+
+    /* HERO */
+    .page-hero {
+      position: relative;
+      height: 56vh; min-height: 380px;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .page-hero img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center 30%;
+    }
+    .page-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.05) 0%,
+        rgba(0,0,0,0.20) 40%,
+        rgba(0,0,0,0.60) 75%,
+        rgba(0,0,0,0.78) 100%
+      );
+    }
+    .page-hero-content {
+      position: relative; z-index: 2;
+      text-align: center; padding: 80px 40px 40px;
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--rose-pale); margin-bottom: 14px; display: block;
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 5vw, 72px);
+      font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; color: #FFFCFB;
+    }
+    .page-title em { font-style: italic; color: var(--rose-pale); }
+    .page-subtitle {
+      font-size: 15px; font-weight: 300; line-height: 1.75;
+      color: rgba(255,252,251,0.80); margin-top: 16px; max-width: 520px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    /* MAP SECTION */
+    .map-section {
+      background: var(--white);
+      padding: 72px 80px;
+    }
+    .map-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .map-header-text {}
+    .section-label {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 10px; display: block;
+    }
+    .map-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 3vw, 44px); font-weight: 300;
+      color: var(--bark); letter-spacing: -0.01em; line-height: 1.1;
+    }
+    .map-title em { font-style: italic; color: var(--rose); }
+    .map-count {
+      font-size: 13px; font-weight: 300; color: var(--mist);
+    }
+
+    #stockist-map {
+      width: 100%;
+      height: 480px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      z-index: 1;
+    }
+
+    /* Override Leaflet styles to match theme */
+    .leaflet-popup-content-wrapper {
+      background: var(--white);
+      border-radius: 2px;
+      box-shadow: 0 4px 20px rgba(196,137,122,0.15);
+      border: 1px solid var(--border);
+    }
+    .leaflet-popup-tip { background: var(--white); }
+    .leaflet-popup-content { margin: 14px 18px; }
+    .popup-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px; font-weight: 400; color: var(--bark); margin-bottom: 4px;
+    }
+    .popup-location {
+      font-size: 12px; font-weight: 300; color: var(--mist); margin-bottom: 8px;
+    }
+    .popup-type {
+      font-size: 10px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--rose); background: var(--blush);
+      padding: 3px 8px; border-radius: 10px; display: inline-block;
+    }
+
+    /* STOCKIST LIST */
+    .stockists-section {
+      background: var(--linen);
+      padding: 72px 80px 88px;
+    }
+    .stockists-header {
+      margin-bottom: 40px;
+    }
+    .stockists-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 3vw, 42px); font-weight: 300;
+      color: var(--bark); letter-spacing: -0.01em;
+    }
+    .stockists-title em { font-style: italic; color: var(--rose); }
+
+    .region-group { margin-bottom: 48px; }
+    .region-name {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--mist); margin-bottom: 16px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .stockist-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .stockist-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 24px 24px;
+      border-radius: 2px;
+      text-decoration: none;
+      display: block;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .stockist-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(196,137,122,0.10);
+      border-color: var(--rose-pale);
+    }
+    .stockist-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 400; color: var(--bark); margin-bottom: 5px;
+    }
+    .stockist-location {
+      font-size: 12px; font-weight: 300; color: var(--mist); margin-bottom: 12px;
+      letter-spacing: 0.04em;
+    }
+    .stockist-type {
+      font-size: 10px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--rose); background: var(--blush);
+      padding: 4px 10px; border-radius: 10px; display: inline-block;
+    }
+
+    /* WHOLESALE CTA */
+    .wholesale-cta {
+      background: var(--blush);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      margin: 0 80px 72px;
+      padding: 48px 56px;
+      display: flex; align-items: center; justify-content: space-between; gap: 40px;
+    }
+    .wholesale-cta-text {}
+    .wholesale-cta-label {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 10px; display: block;
+    }
+    .wholesale-cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(24px, 2.8vw, 38px); font-weight: 300;
+      color: var(--bark); line-height: 1.2; letter-spacing: -0.01em;
+    }
+    .wholesale-cta-title em { font-style: italic; color: var(--rose); }
+    .wholesale-cta-body {
+      font-size: 14px; font-weight: 300; color: var(--earth); line-height: 1.7; margin-top: 12px;
+    }
+    .btn-primary {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); background: var(--rose);
+      padding: 15px 34px; text-decoration: none; border-radius: 1px;
+      white-space: nowrap;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover { background: var(--rose-dark); transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer { background: var(--bark); padding: 68px 80px 44px; }
+    .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 56px; padding-bottom: 52px; border-bottom: 1px solid rgba(255,252,251,0.08); }
+    .footer-logo { height: 48px; margin-bottom: 18px; filter: brightness(0) invert(1); opacity: 0.85; }
+    .footer-tagline { font-size: 13px; font-weight: 300; line-height: 1.8; color: rgba(255,252,251,0.45); margin-bottom: 22px; }
+    .footer-social { display: flex; gap: 12px; }
+    .social-link { width: 34px; height: 34px; border: 1px solid rgba(255,252,251,0.12); display: flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 1px; transition: background 0.3s ease; }
+    .social-link:hover { background: rgba(196,137,122,0.2); }
+    .social-link svg { width: 15px; height: 15px; fill: rgba(255,252,251,0.5); }
+    .footer-col-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 400; color: rgba(255,252,251,0.75); margin-bottom: 18px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 13px; font-weight: 300; color: rgba(255,252,251,0.38); text-decoration: none; transition: color 0.3s ease; }
+    .footer-links a:hover { color: rgba(255,252,251,0.7); }
+    .footer-bottom { padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-copy { font-size: 12px; font-weight: 300; color: rgba(255,252,251,0.22); }
+    .footer-nz { display: flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,252,251,0.22); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.15s; }
+    .reveal-delay-3 { transition-delay: 0.22s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .stockist-grid { grid-template-columns: repeat(2, 1fr); }
+      .wholesale-cta { margin: 0 40px 56px; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 14px 24px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .map-section { padding: 48px 20px; }
+      .map-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      #stockist-map { height: 320px; }
+      .stockists-section { padding: 48px 20px 64px; }
+      .stockist-grid { grid-template-columns: 1fr; }
+      .wholesale-cta { margin: 0 20px 56px; padding: 36px 28px; flex-direction: column; align-items: flex-start; gap: 24px; }
+      footer { padding: 48px 24px 32px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; padding-bottom: 40px; }
+      .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="products.html" onclick="closeMenu()">Shop</a>
+    <a href="about.html" onclick="closeMenu()">About</a>
+    <a href="about.html#wholesale" onclick="closeMenu()">Wholesale</a>
+    <a href="stockists.html" onclick="closeMenu()">Stockists</a>
+  </div>
+
+  <nav>
+    <a href="index.html"><img src="images/logo/logo-default.png" alt="Bodytreat" class="nav-logo"></a>
+    <ul class="nav-links">
+      <li><a href="products.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="about.html#wholesale">Wholesale</a></li>
+      <li><a href="stockists.html" class="active">Stockists</a></li>
+    </ul>
+    <a href="products.html" class="nav-cta">Shop Now</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <img src="images/cinematic-images/015.png" alt="New Zealand landscape">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <span class="page-eyebrow">Find Us</span>
+      <h1 class="page-title">Our <em>Stockists</em></h1>
+      <p class="page-subtitle">Bodytreat is stocked in beautiful boutiques, galleries, and wellness destinations across New Zealand. Find your nearest stockist below.</p>
+    </div>
+  </section>
+
+  <!-- Map -->
+  <section class="map-section">
+    <div class="map-header reveal">
+      <div class="map-header-text">
+        <span class="section-label">Interactive Map</span>
+        <h2 class="map-title">Find Bodytreat <em>near you</em></h2>
+      </div>
+      <span class="map-count">12 locations across New Zealand</span>
+    </div>
+    <div id="stockist-map" class="reveal reveal-delay-1"></div>
+  </section>
+
+  <!-- Stockist List -->
+  <section class="stockists-section">
+    <div class="stockists-header reveal">
+      <span class="section-label">All Stockists</span>
+      <h2 class="stockists-title">Where to find <em>Bodytreat</em></h2>
+    </div>
+
+    <!-- Nelson / Tasman -->
+    <div class="region-group">
+      <p class="region-name">Nelson / Tasman Region</p>
+      <div class="stockist-grid">
+        <a href="https://redartgallery.co.nz" target="_blank" rel="noopener" class="stockist-card reveal">
+          <h3 class="stockist-name">Red Art Gallery</h3>
+          <p class="stockist-location">Nelson</p>
+          <span class="stockist-type">Art Gallery</span>
+        </a>
+        <a href="#" class="stockist-card reveal reveal-delay-1">
+          <h3 class="stockist-name">The Old Post Office</h3>
+          <p class="stockist-location">Upper Moutere</p>
+          <span class="stockist-type">Gift Shop</span>
+        </a>
+        <a href="#" class="stockist-card reveal reveal-delay-2">
+          <h3 class="stockist-name">Country Blooms</h3>
+          <p class="stockist-location">Hope, Nelson</p>
+          <span class="stockist-type">Florist &amp; Gifts</span>
+        </a>
+        <a href="#" class="stockist-card reveal">
+          <h3 class="stockist-name">Toad Hall</h3>
+          <p class="stockist-location">Motueka</p>
+          <span class="stockist-type">Café &amp; Gifts</span>
+        </a>
+        <a href="#" class="stockist-card reveal reveal-delay-1">
+          <h3 class="stockist-name">Nelson Classic Car Museum</h3>
+          <p class="stockist-location">Nelson</p>
+          <span class="stockist-type">Museum &amp; Gifts</span>
+        </a>
+        <a href="#" class="stockist-card reveal reveal-delay-2">
+          <h3 class="stockist-name">Foxy Boxy</h3>
+          <p class="stockist-location">Nelson</p>
+          <span class="stockist-type">Gift Shop</span>
+        </a>
+        <a href="#" class="stockist-card reveal">
+          <h3 class="stockist-name">Kimi Ora Eco Resort</h3>
+          <p class="stockist-location">Kaiteriteri</p>
+          <span class="stockist-type">Eco Resort &amp; Spa</span>
+        </a>
+        <a href="#" class="stockist-card reveal reveal-delay-1">
+          <h3 class="stockist-name">Rabbit Island Coffee Co.</h3>
+          <p class="stockist-location">Māpua</p>
+          <span class="stockist-type">Café &amp; Gifts</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Other Regions -->
+    <div class="region-group">
+      <p class="region-name">Other Regions</p>
+      <div class="stockist-grid">
+        <a href="#" class="stockist-card reveal">
+          <h3 class="stockist-name">Sanctum Recovery</h3>
+          <p class="stockist-location">Auckland</p>
+          <span class="stockist-type">Wellness Centre</span>
+        </a>
+        <a href="#" class="stockist-card reveal reveal-delay-1">
+          <h3 class="stockist-name">Giftrapt</h3>
+          <p class="stockist-location">Te Puke, Bay of Plenty</p>
+          <span class="stockist-type">Gift Shop</span>
+        </a>
+        <a href="#" class="stockist-card reveal reveal-delay-2">
+          <h3 class="stockist-name">Mana Retreat Centre</h3>
+          <p class="stockist-location">Manaia, Coromandel</p>
+          <span class="stockist-type">Retreat Centre</span>
+        </a>
+        <a href="#" class="stockist-card reveal">
+          <h3 class="stockist-name">Madame Fancy Pants</h3>
+          <p class="stockist-location">Featherston, Wairarapa</p>
+          <span class="stockist-type">Boutique</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wholesale CTA -->
+  <div class="wholesale-cta reveal">
+    <div class="wholesale-cta-text">
+      <span class="wholesale-cta-label">For Businesses</span>
+      <h3 class="wholesale-cta-title">Want to stock <em>Bodytreat?</em></h3>
+      <p class="wholesale-cta-body">We welcome wholesale enquiries from spas, boutiques, galleries, and wellness businesses across New Zealand. New stockists receive free testers, a free display unit, and complimentary first delivery.</p>
+    </div>
+    <a href="about.html#wholesale" class="btn-primary">Wholesale Enquiries</a>
+  </div>
+
+  <footer>
+    <div class="footer-top">
+      <div>
+        <img src="images/logo/logo-default.png" alt="Bodytreat" class="footer-logo">
+        <p class="footer-tagline">Handcrafted aromatherapy body oils made with love in the Tasman region, New Zealand.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Shop</p>
+        <ul class="footer-links">
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="products.html#bio-retinol">Bio-Retinol Face Oil</a></li>
+          <li><a href="products.html">Body Oil Blends</a></li>
+          <li><a href="products.html#gift-set">Gift Sets</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">About</p>
+        <ul class="footer-links">
+          <li><a href="about.html">Rosie's Story</a></li>
+          <li><a href="stockists.html">Stockists</a></li>
+          <li><a href="about.html#wholesale">Wholesale Enquiries</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Help</p>
+        <ul class="footer-links">
+          <li><a href="#">Shipping &amp; Returns</a></li>
+          <li><a href="#">Terms &amp; Policies</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Bodytreat. All rights reserved.</p>
+      <div class="footer-nz"><span>🇳🇿</span><span>Made in New Zealand</span></div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    function toggleMenu() { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : ''; }
+    function closeMenu() { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+    setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 1200);
+
+    // Leaflet map
+    const map = L.map('stockist-map', { zoomControl: true, scrollWheelZoom: false }).setView([-40.5, 173.5], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+
+    // Custom rose-coloured pin SVG
+    const rosePinSvg = (label) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42" width="32" height="42">
+      <path d="M16 0C8.3 0 2 6.3 2 14c0 10 14 28 14 28S30 24 30 14C30 6.3 23.7 0 16 0z" fill="#C4897A" stroke="#A86D5F" stroke-width="1"/>
+      <circle cx="16" cy="14" r="6" fill="white" opacity="0.9"/>
+    </svg>`;
+
+    const markerIcon = L.divIcon({
+      html: rosePinSvg(),
+      className: '',
+      iconSize: [32, 42],
+      iconAnchor: [16, 42],
+      popupAnchor: [0, -44]
+    });
+
+    const stockists = [
+      { name: 'Red Art Gallery', location: 'Nelson', type: 'Art Gallery', lat: -41.2706, lng: 173.2840 },
+      { name: 'The Old Post Office', location: 'Upper Moutere', type: 'Gift Shop', lat: -41.3847, lng: 172.9965 },
+      { name: 'Country Blooms', location: 'Hope, Nelson', type: 'Florist & Gifts', lat: -41.3167, lng: 173.1167 },
+      { name: 'Toad Hall', location: 'Motueka', type: 'Café & Gifts', lat: -41.1167, lng: 172.9833 },
+      { name: 'Nelson Classic Car Museum', location: 'Nelson', type: 'Museum & Gifts', lat: -41.272, lng: 173.284 },
+      { name: 'Foxy Boxy', location: 'Nelson', type: 'Gift Shop', lat: -41.268, lng: 173.280 },
+      { name: 'Kimi Ora Eco Resort', location: 'Kaiteriteri', type: 'Eco Resort & Spa', lat: -40.9500, lng: 172.9833 },
+      { name: 'Rabbit Island Coffee Co.', location: 'Māpua', type: 'Café & Gifts', lat: -41.250, lng: 173.117 },
+      { name: 'Sanctum Recovery', location: 'Auckland', type: 'Wellness Centre', lat: -36.849, lng: 174.763 },
+      { name: 'Giftrapt', location: 'Te Puke', type: 'Gift Shop', lat: -37.783, lng: 176.317 },
+      { name: 'Mana Retreat Centre', location: 'Manaia, Coromandel', type: 'Retreat Centre', lat: -36.980, lng: 175.671 },
+      { name: 'Madame Fancy Pants', location: 'Featherston', type: 'Boutique', lat: -41.117, lng: 175.333 },
+    ];
+
+    stockists.forEach(s => {
+      L.marker([s.lat, s.lng], { icon: markerIcon })
+        .addTo(map)
+        .bindPopup(`<div class="popup-name">${s.name}</div><div class="popup-location">${s.location}</div><span class="popup-type">${s.type}</span>`);
+    });
+  </script>
+</body>
+</html>

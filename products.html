@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — Bodytreat</title>
+  <link rel="icon" href="images/logo/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:      #FFFCFB;
+      --linen:      #FEF7F4;
+      --blush:      #F8EDE8;
+      --petal:      #EEDDD6;
+      --rose:       #C4897A;
+      --rose-dark:  #A86D5F;
+      --rose-pale:  #EAC5BB;
+      --gold:       #B8924A;
+      --gold-light: #CCA85E;
+      --bark:       #2C1A14;
+      --earth:      #3D2218;
+      --mist:       #7A5850;
+      --border:     #E8D4CE;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--linen);
+      color: var(--bark);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(254,252,251,0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(196,137,122,0.06);
+      transition: padding 0.4s ease;
+    }
+    .nav-logo { height: 48px; transition: opacity 0.3s ease; }
+    .nav-logo:hover { opacity: 0.8; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 12px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--earth); text-decoration: none;
+      transition: color 0.3s ease; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: var(--rose);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--rose-dark); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-cta {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); background: var(--rose); padding: 10px 24px;
+      text-decoration: none; border-radius: 1px; transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .nav-cta:hover { background: var(--rose-dark); transform: translateY(-1px); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; background: none; border: none;
+    }
+    .hamburger span { display: block; width: 24px; height: 1px; background: var(--bark); transition: transform 0.3s ease, opacity 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; background: var(--white);
+      z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; font-style: italic;
+      color: var(--bark); text-decoration: none; transition: color 0.3s ease;
+    }
+    .mobile-menu a:hover { color: var(--rose); }
+
+    /* PAGE HERO */
+    .page-hero {
+      position: relative;
+      height: 52vh;
+      min-height: 380px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0;
+    }
+    .page-hero img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 40%;
+    }
+    .page-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.05) 0%,
+        rgba(0,0,0,0.20) 40%,
+        rgba(0,0,0,0.60) 75%,
+        rgba(0,0,0,0.78) 100%
+      );
+    }
+    .page-hero-content {
+      position: relative; z-index: 2;
+      text-align: center; padding: 80px 40px 40px;
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--rose-pale); margin-bottom: 14px; display: block;
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 5vw, 72px);
+      font-weight: 300; line-height: 1.05; letter-spacing: -0.02em;
+      color: #FFFCFB;
+    }
+    .page-title em { font-style: italic; color: var(--rose-pale); }
+    .page-subtitle {
+      font-size: 15px; font-weight: 300; line-height: 1.75;
+      color: rgba(255,252,251,0.80); margin-top: 16px; max-width: 540px; margin-left: auto; margin-right: auto;
+    }
+
+    /* INTRO STRIP */
+    .intro-strip {
+      background: var(--blush);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .intro-strip p {
+      font-size: 13px; font-weight: 300; color: var(--earth); letter-spacing: 0.03em;
+    }
+    .intro-strip p strong { font-weight: 400; color: var(--bark); }
+    .free-ship {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--rose); white-space: nowrap;
+    }
+
+    /* PRODUCTS MAIN */
+    .products-main {
+      background: var(--linen);
+      padding: 64px 80px 100px;
+    }
+
+    /* CATEGORY HEADING */
+    .category-heading {
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .category-heading h2 {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--mist);
+    }
+
+    /* PRODUCT GRID */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 72px;
+    }
+    .product-grid--half {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .product-card {
+      background: transparent;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .product-card:hover { transform: translateY(-4px); }
+
+    .product-image-wrap {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: var(--blush);
+      margin-bottom: 14px;
+    }
+    .product-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .product-card:hover .product-image-wrap img { transform: scale(1.04); }
+
+    .product-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--rose); color: var(--white);
+      font-size: 9px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 9px;
+    }
+
+    .product-info { padding: 0; }
+
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px; font-weight: 400; color: var(--bark);
+      line-height: 1.3; margin-bottom: 6px;
+    }
+
+    .product-footer {
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .product-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; font-weight: 300; color: var(--mist);
+    }
+    .product-link {
+      font-size: 11px; font-weight: 400; color: var(--rose);
+      opacity: 0; transform: translateX(-4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .product-card:hover .product-link { opacity: 1; transform: translateX(0); }
+
+    /* GIFT CARD */
+    .gift-card {
+      grid-column: 1 / -1;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      aspect-ratio: 21 / 8;
+      background: var(--blush);
+      transition: transform 0.4s ease;
+    }
+    .gift-card:hover { transform: translateY(-3px); }
+    .gift-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 20%;
+      transition: transform 0.6s ease;
+    }
+    .gift-card:hover img { transform: scale(1.03); }
+    .gift-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(44,26,20,0.72) 0%, rgba(44,26,20,0.2) 60%, transparent 100%);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 48px 56px;
+      gap: 14px;
+    }
+    .gift-eyebrow {
+      font-size: 10px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--rose-pale);
+    }
+    .gift-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 2.6vw, 38px); font-weight: 300;
+      color: #FFFCFB; line-height: 1.2; letter-spacing: -0.01em;
+      max-width: 480px;
+    }
+    .gift-title em { font-style: italic; }
+    .gift-footer {
+      display: flex; align-items: baseline; gap: 24px; margin-top: 4px;
+    }
+    .gift-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 300; color: rgba(255,252,251,0.75);
+    }
+    .gift-cta {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(255,252,251,0.85);
+      border-bottom: 1px solid rgba(255,252,251,0.3);
+      padding-bottom: 2px;
+    }
+
+    /* FOOTER */
+    footer { background: var(--bark); padding: 68px 80px 44px; }
+    .footer-top {
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 56px; padding-bottom: 52px; border-bottom: 1px solid rgba(255,252,251,0.08);
+    }
+    .footer-logo { height: 48px; margin-bottom: 18px; filter: brightness(0) invert(1); opacity: 0.85; }
+    .footer-tagline { font-size: 13px; font-weight: 300; line-height: 1.8; color: rgba(255,252,251,0.45); margin-bottom: 22px; }
+    .footer-social { display: flex; gap: 12px; }
+    .social-link { width: 34px; height: 34px; border: 1px solid rgba(255,252,251,0.12); display: flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 1px; transition: background 0.3s ease; }
+    .social-link:hover { background: rgba(196,137,122,0.2); }
+    .social-link svg { width: 15px; height: 15px; fill: rgba(255,252,251,0.5); }
+    .footer-col-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 400; color: rgba(255,252,251,0.75); margin-bottom: 18px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 13px; font-weight: 300; color: rgba(255,252,251,0.38); text-decoration: none; transition: color 0.3s ease; }
+    .footer-links a:hover { color: rgba(255,252,251,0.7); }
+    .footer-bottom { padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-copy { font-size: 12px; font-weight: 300; color: rgba(255,252,251,0.22); }
+    .footer-nz { display: flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,252,251,0.22); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .product-grid--half { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 14px 24px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .page-hero { height: 44vh; min-height: 300px; }
+      .products-main { padding: 40px 20px 72px; }
+      .intro-strip { padding: 14px 20px; flex-direction: column; align-items: flex-start; gap: 6px; }
+      .product-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .gift-card { aspect-ratio: 4 / 3; }
+      .gift-card-overlay { padding: 28px 32px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; padding-bottom: 40px; }
+      footer { padding: 48px 24px 32px; }
+      .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="products.html" onclick="closeMenu()">Shop</a>
+    <a href="about.html" onclick="closeMenu()">About</a>
+    <a href="about.html#wholesale" onclick="closeMenu()">Wholesale</a>
+    <a href="stockists.html" onclick="closeMenu()">Stockists</a>
+  </div>
+
+  <nav id="navbar">
+    <a href="index.html"><img src="images/logo/logo-default.png" alt="Bodytreat" class="nav-logo"></a>
+    <ul class="nav-links">
+      <li><a href="products.html" class="active">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="about.html#wholesale">Wholesale</a></li>
+      <li><a href="stockists.html">Stockists</a></li>
+    </ul>
+    <a href="products.html" class="nav-cta">Shop Now</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </nav>
+
+  <section class="page-hero">
+    <img src="images/cinematic-images/020.png" alt="Bodytreat body oil">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <span class="page-eyebrow">The Collection</span>
+      <h1 class="page-title">Shop <em>all products</em></h1>
+      <p class="page-subtitle">Eight handcrafted blends, each formulated for a specific purpose. Pure essential oils, locally sourced NZ ingredients, made by hand in the Tasman region.</p>
+    </div>
+  </section>
+
+  <div class="intro-strip">
+    <p><strong>8 products</strong> — All natural, NZ made, no parabens or artificial additives</p>
+    <span class="free-ship">🇳🇿 Free shipping within NZ</span>
+  </div>
+
+  <main class="products-main">
+
+    <!-- Body Oils -->
+    <div class="category-heading reveal">
+      <h2>Body Oil Blends</h2>
+    </div>
+    <div class="product-grid">
+      <a href="#" class="product-card reveal" data-stripe="aches-pains">
+        <div class="product-image-wrap"><img src="images/products/P1010201.jpg" alt="Aches &amp; Pains Blend"></div>
+        <div class="product-info">
+          <h3 class="product-name">Aches &amp; Pains Blend</h3>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+        </div>
+      </a>
+      <a href="#" class="product-card reveal reveal-delay-1" data-stripe="calm-relax">
+        <div class="product-image-wrap"><img src="images/products/P1010224.jpg" alt="Calm &amp; Relax Blend"></div>
+        <div class="product-info">
+          <h3 class="product-name">Calm &amp; Relax Blend</h3>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+        </div>
+      </a>
+      <a href="#" class="product-card reveal reveal-delay-2" data-stripe="dry-skin">
+        <div class="product-image-wrap"><img src="images/products/P1010221.jpg" alt="Dry Skin Nourish"></div>
+        <div class="product-info">
+          <h3 class="product-name">Dry Skin Nourish</h3>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+        </div>
+      </a>
+      <a href="#" class="product-card reveal reveal-delay-3" data-stripe="soothe-sleep">
+        <div class="product-image-wrap"><img src="images/products/P1010208.jpg" alt="Soothe &amp; Sleep Blend"></div>
+        <div class="product-info">
+          <h3 class="product-name">Soothe &amp; Sleep Blend</h3>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+        </div>
+      </a>
+      <a href="#" class="product-card reveal" data-stripe="uplifting">
+        <div class="product-image-wrap"><img src="images/products/P1010217.jpg" alt="Uplifting Blend"></div>
+        <div class="product-info">
+          <h3 class="product-name">Uplifting Blend</h3>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+        </div>
+      </a>
+      <a href="#" class="product-card reveal reveal-delay-1" data-stripe="womens-hormone">
+        <div class="product-image-wrap"><img src="images/products/P1010198.jpg" alt="Womens' Hormone Blend"></div>
+        <div class="product-info">
+          <h3 class="product-name">Womens' Hormone Blend</h3>
+          <div class="product-footer"><span class="product-price">$44.99</span><span class="product-link">Shop →</span></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Face Oil -->
+    <div class="category-heading reveal">
+      <h2>Face Oil</h2>
+    </div>
+    <div class="product-grid product-grid--half">
+      <a href="#" class="product-card reveal" id="bio-retinol" data-stripe="bio-retinol">
+        <div class="product-image-wrap">
+          <img src="images/products/005.jpg" alt="Bio-Retinol Face Oil">
+          <div class="product-badge">Bestseller</div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Bio-Retinol Firm &amp; Smooth Face Oil</h3>
+          <div class="product-footer"><span class="product-price">$47.00</span><span class="product-link">Shop →</span></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Gift Set -->
+    <div class="category-heading reveal">
+      <h2>Gift Sets</h2>
+    </div>
+    <div class="product-grid">
+      <a href="#" class="gift-card reveal" id="gift-set" data-stripe="gift-set">
+        <img src="images/products/IMG_0902.jpg" alt="Bodytreat collection">
+        <div class="gift-card-overlay">
+          <span class="gift-eyebrow">Country Blooms × Bodytreat</span>
+          <h3 class="gift-title"><em>Gift Set</em></h3>
+          <div class="gift-footer">
+            <span class="gift-price">$120.00</span>
+            <span class="gift-cta">Shop →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-top">
+      <div>
+        <img src="images/logo/logo-default.png" alt="Bodytreat" class="footer-logo">
+        <p class="footer-tagline">Handcrafted aromatherapy body oils made with love in the Tasman region, New Zealand.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Shop</p>
+        <ul class="footer-links">
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="products.html#bio-retinol">Bio-Retinol Face Oil</a></li>
+          <li><a href="products.html">Body Oil Blends</a></li>
+          <li><a href="products.html#gift-set">Gift Sets</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">About</p>
+        <ul class="footer-links">
+          <li><a href="about.html">Rosie's Story</a></li>
+          <li><a href="stockists.html">Stockists</a></li>
+          <li><a href="about.html#wholesale">Wholesale Enquiries</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Help</p>
+        <ul class="footer-links">
+          <li><a href="#">Shipping &amp; Returns</a></li>
+          <li><a href="#">Terms &amp; Policies</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Bodytreat. All rights reserved.</p>
+      <div class="footer-nz"><span>🇳🇿</span><span>Made in New Zealand</span></div>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    function toggleMenu() { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : ''; }
+    function closeMenu() { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+    setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 1200);
+  </script>
+</body>
+</html>

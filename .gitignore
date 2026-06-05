@@ -1,0 +1,4 @@
+.DS_Store
+temporary screenshots/
+*.DS_Store
+node_modules/

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Rosie — Bodytreat</title>
+  <link rel="icon" href="images/logo/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:      #FFFCFB;
+      --linen:      #FEF7F4;
+      --blush:      #F8EDE8;
+      --petal:      #EEDDD6;
+      --rose:       #C4897A;
+      --rose-dark:  #A86D5F;
+      --rose-pale:  #EAC5BB;
+      --gold:       #B8924A;
+      --bark:       #2C1A14;
+      --earth:      #3D2218;
+      --mist:       #7A5850;
+      --border:     #E8D4CE;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--linen);
+      color: var(--bark);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* NAV — identical across pages */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(254,252,251,0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(196,137,122,0.06);
+    }
+    .nav-logo { height: 48px; transition: opacity 0.3s ease; }
+    .nav-logo:hover { opacity: 0.8; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 12px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--earth); text-decoration: none; transition: color 0.3s ease; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: var(--rose);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--rose-dark); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+    .nav-cta {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); background: var(--rose); padding: 10px 24px;
+      text-decoration: none; border-radius: 1px; transition: background 0.3s ease;
+    }
+    .nav-cta:hover { background: var(--rose-dark); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; background: none; border: none;
+    }
+    .hamburger span { display: block; width: 24px; height: 1px; background: var(--bark); transition: transform 0.3s ease, opacity 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; background: var(--white);
+      z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; font-style: italic;
+      color: var(--bark); text-decoration: none; transition: color 0.3s ease;
+    }
+    .mobile-menu a:hover { color: var(--rose); }
+
+    /* HERO */
+    .page-hero {
+      position: relative;
+      height: 65vh; min-height: 440px;
+      overflow: hidden;
+      display: flex; align-items: flex-end;
+    }
+    .page-hero img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 30%;
+    }
+    .page-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.05) 0%,
+        rgba(0,0,0,0.10) 35%,
+        rgba(0,0,0,0.52) 68%,
+        rgba(0,0,0,0.80) 100%
+      );
+    }
+    .page-hero-content {
+      position: relative; z-index: 2;
+      padding: 0 80px 64px; max-width: 640px;
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--rose-pale); margin-bottom: 14px; display: block;
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(46px, 5.5vw, 76px);
+      font-weight: 300; line-height: 1.05; letter-spacing: -0.02em;
+      color: #FFFCFB;
+    }
+    .page-title em { font-style: italic; color: var(--rose-pale); }
+
+    /* INTRO */
+    .intro-section {
+      background: var(--white);
+      padding: 80px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 88px;
+      align-items: center;
+    }
+    .intro-image-wrap { position: relative; }
+    .intro-image-wrap img {
+      width: 100%; aspect-ratio: 3 / 4;
+      object-fit: cover; object-position: center top;
+      display: block;
+    }
+    .intro-image-frame {
+      position: absolute; inset: -14px;
+      border: 1px solid var(--rose-pale); pointer-events: none; z-index: -1;
+    }
+    .intro-image-quote {
+      position: absolute; bottom: -20px; left: -20px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 20px 24px;
+      max-width: 260px;
+      box-shadow: 0 4px 20px rgba(196,137,122,0.08);
+    }
+    .intro-image-quote blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-weight: 300; font-style: italic;
+      color: var(--earth); line-height: 1.6;
+    }
+    .intro-image-quote cite {
+      display: block; margin-top: 10px;
+      font-size: 10px; font-weight: 400; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--mist);
+      font-style: normal;
+    }
+
+    .intro-content {}
+    .section-label {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 16px; display: block;
+    }
+    .intro-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 3.2vw, 50px); font-weight: 300;
+      line-height: 1.15; color: var(--bark); margin-bottom: 24px; letter-spacing: -0.02em;
+    }
+    .intro-title em { font-style: italic; color: var(--rose); }
+    .intro-body {
+      font-size: 15px; font-weight: 300; line-height: 1.85; color: var(--earth); margin-bottom: 18px;
+    }
+    .intro-rule { width: 40px; height: 1px; background: var(--rose-pale); margin: 28px 0; }
+
+    /* QUALIFICATIONS */
+    .qual-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-bottom: 32px;
+    }
+    .qual-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; font-weight: 300; color: var(--earth);
+      padding: 12px 16px;
+      background: var(--blush);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+    }
+    .qual-item::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--rose);
+      flex-shrink: 0; margin-top: 5px;
+    }
+
+    /* TIMELINE */
+    .timeline-section {
+      background: var(--blush);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 88px 80px;
+    }
+    .timeline-header {
+      text-align: center; margin-bottom: 64px;
+    }
+    .timeline-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 3.5vw, 52px); font-weight: 300;
+      color: var(--bark); letter-spacing: -0.02em;
+    }
+    .timeline-title em { font-style: italic; color: var(--rose); }
+    .timeline {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; position: relative;
+    }
+    .timeline::before {
+      content: ''; position: absolute;
+      top: 20px; left: calc(12.5% + 8px); right: calc(12.5% + 8px);
+      height: 1px; background: var(--rose-pale);
+    }
+    .timeline-item {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 0 20px;
+      position: relative;
+    }
+    .timeline-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--rose);
+      margin-bottom: 20px; flex-shrink: 0;
+      z-index: 1;
+    }
+    .timeline-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 300; color: var(--rose-dark);
+      margin-bottom: 8px;
+    }
+    .timeline-event {
+      font-size: 13px; font-weight: 300; color: var(--earth); line-height: 1.6;
+    }
+
+    /* PHILOSOPHY */
+    .philosophy-section {
+      background: var(--white);
+      padding: 88px 80px;
+    }
+    .philosophy-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+      margin-top: 52px;
+    }
+    .phil-card {
+      padding: 36px 32px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--linen);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .phil-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(196,137,122,0.10);
+    }
+    .phil-icon { margin-bottom: 20px; }
+    .phil-icon svg { width: 36px; height: 36px; }
+    .phil-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 400; color: var(--bark); margin-bottom: 12px;
+    }
+    .phil-body {
+      font-size: 14px; font-weight: 300; color: var(--earth); line-height: 1.75;
+    }
+
+    /* INGREDIENTS SECTION */
+    .ingredients-section {
+      background: var(--linen);
+      padding: 88px 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .ingredients-image img {
+      width: 100%; aspect-ratio: 5 / 4;
+      object-fit: cover; object-position: center;
+    }
+    .ingredients-label {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 16px; display: block;
+    }
+    .ingredients-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 3vw, 46px); font-weight: 300;
+      line-height: 1.15; color: var(--bark); margin-bottom: 20px; letter-spacing: -0.02em;
+    }
+    .ingredients-title em { font-style: italic; color: var(--rose); }
+    .ingredients-body {
+      font-size: 15px; font-weight: 300; line-height: 1.85; color: var(--earth); margin-bottom: 18px;
+    }
+    .ingredients-list {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px;
+    }
+    .ingredient-tag {
+      font-size: 12px; font-weight: 300; color: var(--earth);
+      background: var(--blush); border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 20px;
+    }
+
+    /* WHOLESALE */
+    .wholesale-section {
+      background: var(--rose);
+      padding: 80px;
+      display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center;
+    }
+    .wholesale-label {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,252,251,0.7); margin-bottom: 12px; display: block;
+    }
+    .wholesale-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 3.5vw, 48px); font-weight: 300;
+      color: var(--white); line-height: 1.15; letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+    .wholesale-title em { font-style: italic; opacity: 0.85; }
+    .wholesale-body {
+      font-size: 14px; font-weight: 300; color: rgba(255,252,251,0.8); line-height: 1.75; max-width: 540px;
+    }
+    .wholesale-perks {
+      margin-top: 24px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .wholesale-perk {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 300; color: rgba(255,252,251,0.8);
+    }
+    .wholesale-perk::before {
+      content: '✓'; font-size: 12px; font-weight: 400; color: var(--white);
+    }
+    .wholesale-actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    .btn-white {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--rose-dark); background: var(--white);
+      padding: 15px 32px; text-decoration: none; border-radius: 1px;
+      white-space: nowrap;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(44,26,20,0.15); }
+    .btn-outline-white {
+      font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,252,251,0.8); text-decoration: none;
+      border-bottom: 1px solid rgba(255,252,251,0.4); padding-bottom: 3px;
+      white-space: nowrap;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    .btn-outline-white:hover { color: var(--white); border-color: var(--white); }
+
+    /* FOOTER */
+    footer { background: var(--bark); padding: 68px 80px 44px; }
+    .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 56px; padding-bottom: 52px; border-bottom: 1px solid rgba(255,252,251,0.08); }
+    .footer-logo { height: 48px; margin-bottom: 18px; filter: brightness(0) invert(1); opacity: 0.85; }
+    .footer-tagline { font-size: 13px; font-weight: 300; line-height: 1.8; color: rgba(255,252,251,0.45); margin-bottom: 22px; }
+    .footer-social { display: flex; gap: 12px; }
+    .social-link { width: 34px; height: 34px; border: 1px solid rgba(255,252,251,0.12); display: flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 1px; transition: background 0.3s ease; }
+    .social-link:hover { background: rgba(196,137,122,0.2); }
+    .social-link svg { width: 15px; height: 15px; fill: rgba(255,252,251,0.5); }
+    .footer-col-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 400; color: rgba(255,252,251,0.75); margin-bottom: 18px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 13px; font-weight: 300; color: rgba(255,252,251,0.38); text-decoration: none; transition: color 0.3s ease; }
+    .footer-links a:hover { color: rgba(255,252,251,0.7); }
+    .footer-bottom { padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-copy { font-size: 12px; font-weight: 300; color: rgba(255,252,251,0.22); }
+    .footer-nz { display: flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,252,251,0.22); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .intro-section { grid-template-columns: 1fr; gap: 56px; padding: 64px 56px; }
+      .intro-image-quote { left: 0; right: 0; bottom: -60px; max-width: none; }
+      .intro-image-wrap { margin-bottom: 72px; }
+      .timeline { grid-template-columns: repeat(2, 1fr); gap: 36px; }
+      .timeline::before { display: none; }
+      .philosophy-grid { grid-template-columns: 1fr 1fr; }
+      .ingredients-section { grid-template-columns: 1fr; gap: 48px; }
+      .wholesale-section { grid-template-columns: 1fr; gap: 32px; }
+      .wholesale-actions { flex-direction: row; justify-content: flex-start; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 14px 24px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .page-hero { height: 55vh; min-height: 360px; }
+      .page-hero-content { padding: 0 24px 48px; }
+      .intro-section { padding: 48px 24px; }
+      .timeline-section { padding: 64px 24px; }
+      .timeline { grid-template-columns: 1fr; gap: 28px; }
+      .timeline-item { flex-direction: row; align-items: flex-start; text-align: left; gap: 16px; padding: 0; }
+      .timeline-dot { margin-bottom: 0; flex-shrink: 0; margin-top: 3px; }
+      .philosophy-section { padding: 64px 24px; }
+      .philosophy-grid { grid-template-columns: 1fr; }
+      .ingredients-section { padding: 64px 24px; }
+      .wholesale-section { padding: 56px 24px; grid-template-columns: 1fr; }
+      .wholesale-actions { flex-direction: column; align-items: flex-start; }
+      footer { padding: 48px 24px 32px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; padding-bottom: 40px; }
+      .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .qual-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="products.html" onclick="closeMenu()">Shop</a>
+    <a href="about.html" onclick="closeMenu()">About</a>
+    <a href="about.html#wholesale" onclick="closeMenu()">Wholesale</a>
+    <a href="stockists.html" onclick="closeMenu()">Stockists</a>
+  </div>
+
+  <nav>
+    <a href="index.html"><img src="images/logo/logo-default.png" alt="Bodytreat" class="nav-logo"></a>
+    <ul class="nav-links">
+      <li><a href="products.html">Shop</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="about.html#wholesale">Wholesale</a></li>
+      <li><a href="stockists.html">Stockists</a></li>
+    </ul>
+    <a href="products.html" class="nav-cta">Shop Now</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <img src="images/cinematic-images/006.png" alt="Rosie in the New Zealand countryside">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <span class="page-eyebrow">Our Story</span>
+      <h1 class="page-title">Meet <em>Rosie</em></h1>
+    </div>
+  </section>
+
+  <!-- Story + Image -->
+  <section class="intro-section">
+    <div class="intro-image-wrap reveal">
+      <img src="rosie2.png" alt="Rosie, founder of Bodytreat">
+      <div class="intro-image-frame"></div>
+      <div class="intro-image-quote">
+        <blockquote>"I make every bottle because I believe in the power of pure, natural aromatherapy — just as nature intended."</blockquote>
+        <cite>— Rosie, Founder</cite>
+      </div>
+    </div>
+
+    <div class="intro-content">
+      <span class="section-label reveal">22 Years of Aromatherapy</span>
+      <h2 class="intro-title reveal reveal-delay-1">From England to the <em>Tasman hills</em></h2>
+
+      <p class="intro-body reveal reveal-delay-2">Bodytreat was born from a lifetime of dedication to holistic wellbeing. Rosie began her aromatherapy journey in England in 2002, studying under master practitioners and building deep expertise across aromatherapy, massage, and holistic health.</p>
+
+      <p class="intro-body reveal reveal-delay-2">For a decade, she co-ran a thriving holistic health clinic in Hereford, England — treating clients with therapeutic massage and aromatherapy blends she formulated herself. When she returned to New Zealand, she brought those two decades of knowledge with her.</p>
+
+      <p class="intro-body reveal reveal-delay-2">Today, from her Tasman clinic just outside Nelson, Rosie handcrafts each Bodytreat product in small batches using locally sourced New Zealand botanicals. Every bottle is a product of her expertise, care, and genuine love for the healing properties of essential oils.</p>
+
+      <div class="intro-rule reveal reveal-delay-3"></div>
+
+      <p class="section-label reveal reveal-delay-3" style="margin-bottom: 12px;">Qualifications &amp; Training</p>
+      <div class="qual-grid reveal reveal-delay-3">
+        <div class="qual-item">Qualified Aromatherapist</div>
+        <div class="qual-item">Holistic Health Practitioner</div>
+        <div class="qual-item">Sports &amp; Remedial Massage Therapist</div>
+        <div class="qual-item">Beauty Therapist</div>
+        <div class="qual-item">Trained in England from 2002</div>
+        <div class="qual-item">22 years clinical experience</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="timeline-section">
+    <div class="timeline-header reveal">
+      <span class="section-label">The Journey</span>
+      <h2 class="timeline-title">Two decades of <em>craft &amp; care</em></h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2002</div>
+        <p class="timeline-event">Begins aromatherapy training in England, discovers a passion for essential oils and holistic health.</p>
+      </div>
+      <div class="timeline-item reveal reveal-delay-1">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2006</div>
+        <p class="timeline-event">Co-founds a holistic health clinic in Hereford, England, specialising in therapeutic massage and aromatherapy.</p>
+      </div>
+      <div class="timeline-item reveal reveal-delay-2">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2016</div>
+        <p class="timeline-event">Returns to New Zealand and establishes her Tasman clinic, bringing her signature blends with her.</p>
+      </div>
+      <div class="timeline-item reveal reveal-delay-3">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2022</div>
+        <p class="timeline-event">Launches Bodytreat — making her handcrafted blends available to New Zealanders everywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy -->
+  <section class="philosophy-section">
+    <div style="text-align:center; margin-bottom: 0;">
+      <span class="section-label reveal">Our Philosophy</span>
+      <h2 class="intro-title reveal reveal-delay-1" style="font-size: clamp(32px,3.5vw,52px); margin-bottom:0;">What we believe <em>in</em></h2>
+    </div>
+    <div class="philosophy-grid">
+      <div class="phil-card reveal">
+        <div class="phil-icon">
+          <svg viewBox="0 0 36 36" fill="none">
+            <path d="M18 4c-7.7 0-14 6.3-14 14s6.3 14 14 14 14-6.3 14-14S25.7 4 18 4z" stroke="#C4897A" stroke-width="1.3" fill="none"/>
+            <path d="M18 11c0 0-6 4.5-6 9a6 6 0 0012 0c0-4.5-6-9-6-9z" stroke="#C4897A" stroke-width="1.2" fill="none"/>
+            <path d="M18 11v11" stroke="#C4897A" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="phil-title">Pure over processed</h3>
+        <p class="phil-body">We never use synthetic fragrance, parabens, or artificial additives. Every ingredient serves a therapeutic purpose — nothing more, nothing less.</p>
+      </div>
+      <div class="phil-card reveal reveal-delay-1">
+        <div class="phil-icon">
+          <svg viewBox="0 0 36 36" fill="none">
+            <path d="M9 27l3-11L18 5l6 11 3 11H9z" stroke="#C4897A" stroke-width="1.3" stroke-linejoin="round" fill="none"/>
+            <path d="M14 27v-8h8v8" stroke="#C4897A" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+        <h3 class="phil-title">Local &amp; traceable</h3>
+        <p class="phil-body">We source our ingredients as close to home as possible. New Zealand's incredible botanical landscape is the foundation of every Bodytreat product.</p>
+      </div>
+      <div class="phil-card reveal reveal-delay-2">
+        <div class="phil-icon">
+          <svg viewBox="0 0 36 36" fill="none">
+            <path d="M18 4l2.4 7.4H28l-6.2 4.5 2.4 7.4L18 19l-6.2 4.3 2.4-7.4L8 11.4h7.6L18 4z" stroke="#C4897A" stroke-width="1.2" stroke-linejoin="round" fill="none"/>
+            <path d="M18 24v8" stroke="#C4897A" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="phil-title">Therapeutic by design</h3>
+        <p class="phil-body">Every blend is formulated with specific therapeutic intent — not just to smell nice, but to genuinely support your body and nervous system.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ingredients -->
+  <section class="ingredients-section">
+    <div class="ingredients-image reveal">
+      <img src="images/cinematic-images/001.png" alt="Natural New Zealand landscape">
+    </div>
+    <div class="reveal reveal-delay-1">
+      <span class="ingredients-label">What goes in</span>
+      <h2 class="ingredients-title">Only the <em>finest botanicals</em></h2>
+      <p class="ingredients-body">Every Bodytreat product uses a base of premium natural carrier oils — apricot kernel, grapeseed, jojoba — chosen for their skin compatibility and nutrient richness. Into this base, Rosie blends therapeutic-grade essential oils, many sourced directly from New Zealand growers.</p>
+      <p class="ingredients-body">Natural Vitamin E tocopherols are added to every blend as a natural preservative — no synthetic chemicals needed.</p>
+      <div class="ingredients-list">
+        <span class="ingredient-tag">Apricot Kernel Oil</span>
+        <span class="ingredient-tag">Jojoba Oil</span>
+        <span class="ingredient-tag">Grapeseed Oil</span>
+        <span class="ingredient-tag">Vitamin E</span>
+        <span class="ingredient-tag">NZ Kanuka</span>
+        <span class="ingredient-tag">Rose</span>
+        <span class="ingredient-tag">Lavender</span>
+        <span class="ingredient-tag">Jasmine</span>
+        <span class="ingredient-tag">Rose Geranium</span>
+        <span class="ingredient-tag">Sandalwood</span>
+        <span class="ingredient-tag">Bergamot</span>
+        <span class="ingredient-tag">Chamomile</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wholesale -->
+  <section class="wholesale-section" id="wholesale">
+    <div class="reveal">
+      <span class="wholesale-label">For Stockists</span>
+      <h2 class="wholesale-title">Interested in <em>stocking Bodytreat?</em></h2>
+      <p class="wholesale-body">We welcome wholesale enquiries from spas, retreat centres, gift shops, galleries, and wellness businesses across New Zealand. A beautiful product that practically sells itself.</p>
+      <div class="wholesale-perks">
+        <div class="wholesale-perk">Free product testers for new stockists</div>
+        <div class="wholesale-perk">Free retail display unit included</div>
+        <div class="wholesale-perk">Free initial delivery on first order</div>
+        <div class="wholesale-perk">Minimum order quantities available on request</div>
+      </div>
+    </div>
+    <div class="wholesale-actions reveal reveal-delay-1">
+      <a href="mailto:lovebodytreat@outlook.com" class="btn-white">Enquire Now</a>
+      <a href="stockists.html" class="btn-outline-white">View Stockists</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div>
+        <img src="images/logo/logo-default.png" alt="Bodytreat" class="footer-logo">
+        <p class="footer-tagline">Handcrafted aromatherapy body oils made with love in the Tasman region, New Zealand.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Shop</p>
+        <ul class="footer-links">
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="products.html#bio-retinol">Bio-Retinol Face Oil</a></li>
+          <li><a href="products.html">Body Oil Blends</a></li>
+          <li><a href="products.html#gift-set">Gift Sets</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">About</p>
+        <ul class="footer-links">
+          <li><a href="about.html">Rosie's Story</a></li>
+          <li><a href="stockists.html">Stockists</a></li>
+          <li><a href="about.html#wholesale">Wholesale Enquiries</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Help</p>
+        <ul class="footer-links">
+          <li><a href="#">Shipping &amp; Returns</a></li>
+          <li><a href="#">Terms &amp; Policies</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Bodytreat. All rights reserved.</p>
+      <div class="footer-nz"><span>🇳🇿</span><span>Made in New Zealand</span></div>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    function toggleMenu() { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : ''; }
+    function closeMenu() { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+    setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 1200);
+  </script>
+</body>
+</html>
