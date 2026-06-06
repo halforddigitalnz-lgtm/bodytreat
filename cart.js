@@ -243,10 +243,14 @@
       '#cart-checkout-btn:disabled{opacity:0.6;cursor:not-allowed}',
 
       '/* Nav cart button */',
-      '#cart-btn{background:none;border:none;cursor:pointer;display:flex;align-items:center;padding:6px;position:relative;color:#3D2218;transition:color 0.3s ease;margin-right:4px}',
+      '#nav-right-group{display:flex;align-items:center;gap:16px}',
+      '#cart-btn{background:none;border:none;cursor:pointer;display:flex;align-items:center;padding:6px;position:relative;color:#3D2218;transition:color 0.3s ease}',
       '#cart-btn:hover{color:#C4897A}',
       '#cart-btn svg{display:block}',
       '#cart-badge{position:absolute;top:0;right:0;background:#C4897A;color:#FFFCFB;font-family:"Jost",sans-serif;font-size:9px;font-weight:500;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;line-height:1}',
+      '/* Hero-nav: cart icon turns white with transparent nav */',
+      'nav.hero-nav #cart-btn{color:rgba(255,252,251,0.82)}',
+      'nav.hero-nav #cart-btn:hover{color:rgba(255,252,251,1)}',
 
       '/* Fix button reset for product buy buttons */',
       'button.product-buy-btn{border:none;cursor:pointer;width:100%}',
@@ -277,11 +281,21 @@
       '<span id="cart-badge" style="display:none">0</span>';
     btn.onclick = openCart;
 
-    var hamburger = nav.querySelector('.hamburger');
-    if (hamburger) {
-      nav.insertBefore(btn, hamburger);
+    // Group cart button with .nav-cta so they sit together on the right
+    var navCta = nav.querySelector('.nav-cta');
+    if (navCta) {
+      var group = document.createElement('div');
+      group.id = 'nav-right-group';
+      navCta.parentNode.insertBefore(group, navCta);
+      group.appendChild(navCta);
+      group.appendChild(btn);
     } else {
-      nav.appendChild(btn);
+      var hamburger = nav.querySelector('.hamburger');
+      if (hamburger) {
+        nav.insertBefore(btn, hamburger);
+      } else {
+        nav.appendChild(btn);
+      }
     }
   }
 
