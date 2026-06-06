@@ -281,21 +281,19 @@
       '<span id="cart-badge" style="display:none">0</span>';
     btn.onclick = openCart;
 
-    // Group cart button with .nav-cta so they sit together on the right
-    var navCta = nav.querySelector('.nav-cta');
-    if (navCta) {
+    // Group cart + hamburger as a single rightmost flex item.
+    // Desktop: hamburger hidden → only cart shows.
+    // Mobile: nav-links + nav-cta hidden → nav has 2 items (logo | group),
+    // so space-between puts group at far right, not stranded in the middle.
+    var hamburger = nav.querySelector('.hamburger');
+    if (hamburger) {
       var group = document.createElement('div');
       group.id = 'nav-right-group';
-      navCta.parentNode.insertBefore(group, navCta);
-      group.appendChild(navCta);
+      hamburger.parentNode.insertBefore(group, hamburger);
       group.appendChild(btn);
+      group.appendChild(hamburger);
     } else {
-      var hamburger = nav.querySelector('.hamburger');
-      if (hamburger) {
-        nav.insertBefore(btn, hamburger);
-      } else {
-        nav.appendChild(btn);
-      }
+      nav.appendChild(btn);
     }
   }
 
