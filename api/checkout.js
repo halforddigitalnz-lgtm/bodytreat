@@ -19,22 +19,31 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Cart is empty' });
     }
 
-    // SECURITY: resolve Price IDs server-side only — never trust any price from the client
-    const line_items = items.map(({ slug, quantity }) => {
+    // SECURITY: resolve Price IDs server-side only — never trust any price from the client.
+    // Supports both priceId (price_xxx) and productId (prod_xxx) entries in products.js.
+    const line_items = await Promise.all(items.map(async ({ slug, quantity }) => {
       const product = PRODUCTS[slug];
 
       if (!product) {
         throw new Error(`Unknown product: ${slug}`);
       }
-      if (!product.priceId || product.priceId === 'price_REPLACE_ME') {
+
+      let priceId = product.priceId;
+
+      if (product.productId) {
+        // Look up the first active price for this product
+        const prices = await stripe.prices.list({ product: product.productId, active: true, limit: 1 });
+        if (!prices.data.length) throw new Error(`No active price found for product: ${slug}`);
+        priceId = prices.data[0].id;
+      } else if (!priceId || priceId === 'price_REPLACE_ME') {
         throw new Error(`Product not yet configured in Stripe: ${slug}`);
       }
 
       return {
-        price: product.priceId,
+        price: priceId,
         quantity: Math.max(1, Math.floor(Number(quantity))),
       };
-    });
+    }));
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
