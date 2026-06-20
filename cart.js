@@ -273,6 +273,15 @@
     var nav = document.querySelector('nav');
     if (!nav) return;
 
+    // Move "Shop Now" button into the nav-links list so it sits beside the other items
+    var navCta = nav.querySelector('.nav-cta');
+    var navLinks = nav.querySelector('.nav-links');
+    if (navCta && navLinks) {
+      var li = document.createElement('li');
+      li.appendChild(navCta);
+      navLinks.appendChild(li);
+    }
+
     var btn = document.createElement('button');
     btn.id = 'cart-btn';
     btn.setAttribute('aria-label', 'Open cart');
