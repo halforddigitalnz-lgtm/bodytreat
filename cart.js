@@ -255,6 +255,10 @@
       '/* Fix button reset for product buy buttons */',
       'button.product-buy-btn{border:none;cursor:pointer;width:100%}',
 
+      '/* Keep Shop Now text white on hover */',
+      '.nav-links .nav-cta:hover{color:#FFFCFB!important}',
+      '.nav-links .nav-cta::after{display:none}',
+
       '/* Hide-on-scroll nav */',
       'nav{transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),padding 0.4s ease!important}',
       'nav.nav-hidden{transform:translateY(-100%)!important}',
