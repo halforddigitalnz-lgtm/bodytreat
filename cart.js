@@ -248,9 +248,6 @@
       '#cart-btn:hover{color:#C4897A}',
       '#cart-btn svg{display:block}',
       '#cart-badge{position:absolute;top:0;right:0;background:#C4897A;color:#FFFCFB;font-family:"Jost",sans-serif;font-size:9px;font-weight:500;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;line-height:1}',
-      '/* Hero-nav: cart icon turns white with transparent nav */',
-      'nav.hero-nav #cart-btn{color:rgba(255,252,251,0.82)}',
-      'nav.hero-nav #cart-btn:hover{color:rgba(255,252,251,1)}',
 
       '/* Fix button reset for product buy buttons */',
       'button.product-buy-btn{border:none;cursor:pointer;width:100%}',
@@ -366,11 +363,6 @@
             nav.classList.add('nav-hidden');
           } else {
             nav.classList.remove('nav-hidden');
-            // If transparent hero-nav is reappearing past the top, switch it white immediately
-            if (nav.classList.contains('hero-nav') && currentY > 60) {
-              nav.classList.remove('hero-nav');
-              nav.classList.add('scrolled');
-            }
           }
         }
 
