@@ -255,6 +255,10 @@
       '/* Fix button reset for product buy buttons */',
       'button.product-buy-btn{border:none;cursor:pointer;width:100%}',
 
+      '/* Hide-on-scroll nav */',
+      'nav{transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),padding 0.4s ease!important}',
+      'nav.nav-hidden{transform:translateY(-100%)!important}',
+
       '@media(max-width:480px){',
         '#cart-drawer{width:100vw}',
         '.cart-header{padding:18px 20px 14px}',
@@ -330,11 +334,40 @@
 
   // ── Init ─────────────────────────────────────────────────────────────────────
 
+  function initScrollNav() {
+    var nav = document.querySelector('nav');
+    if (!nav) return;
+    var lastY = window.scrollY;
+    var ticking = false;
+
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        var currentY = window.scrollY;
+        var mobileMenuOpen = document.getElementById('mobileMenu') &&
+                             document.getElementById('mobileMenu').classList.contains('open');
+
+        if (!mobileMenuOpen) {
+          if (currentY > lastY && currentY > 80) {
+            nav.classList.add('nav-hidden');
+          } else {
+            nav.classList.remove('nav-hidden');
+          }
+        }
+
+        lastY = currentY;
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
   function init() {
     injectStyles();
     injectCartButton();
     injectCartDrawer();
     renderCart();
+    initScrollNav();
   }
 
   if (document.readyState === 'loading') {
