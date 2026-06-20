@@ -48,6 +48,7 @@
       background: rgba(254,252,251,0.94);
       backdrop-filter: blur(12px);
       box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(196,137,122,0.06);
+      transition: transform 0.35s ease;
     }
     .nav-logo { height: 84px; transition: opacity 0.3s ease; }
     .nav-logo:hover { opacity: 0.8; }
@@ -92,6 +93,7 @@
     .page-hero {
       position: relative;
       height: 65vh; min-height: 440px;
+      margin-top: 112px;
       overflow: hidden;
       display: flex; align-items: flex-end;
     }
@@ -313,9 +315,24 @@
     /* WHOLESALE */
     #wholesale { scroll-margin-top: 112px; }
     .wholesale-section {
-      background: var(--rose);
+      position: relative;
+      overflow: hidden;
       padding: 80px;
       display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center;
+    }
+    .wholesale-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      z-index: 0;
+    }
+    .wholesale-overlay {
+      position: absolute; inset: 0;
+      background: rgba(164, 96, 83, 0.82);
+      z-index: 1;
+    }
+    .wholesale-section > *:not(.wholesale-video):not(.wholesale-overlay) {
+      position: relative; z-index: 2;
     }
     .wholesale-label {
       font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase;
@@ -587,6 +604,8 @@
 
   <!-- Wholesale -->
   <section class="wholesale-section" id="wholesale">
+    <video class="wholesale-video" autoplay muted loop playsinline><source src="images/stockists-banner-06-V3.mp4" type="video/mp4"></video>
+    <div class="wholesale-overlay"></div>
     <div class="reveal">
       <span class="wholesale-label">For Stockists</span>
       <h2 class="wholesale-title">Interested in <em>stocking Bodytreat?</em></h2>
@@ -657,6 +676,20 @@
     }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(el => observer.observe(el));
     setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 1200);
+
+    (function() {
+      const nav = document.querySelector('nav');
+      let lastY = 0;
+      window.addEventListener('scroll', function() {
+        const y = window.scrollY;
+        if (y > lastY && y > 80) {
+          nav.style.transform = 'translateY(-100%)';
+        } else {
+          nav.style.transform = '';
+        }
+        lastY = y;
+      }, { passive: true });
+    })();
   </script>
   <script src="/cart.js"></script>
 </body>

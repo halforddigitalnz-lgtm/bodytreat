@@ -60,6 +60,7 @@
       background: rgba(254,252,251,0.94);
       backdrop-filter: blur(12px);
       box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(196,137,122,0.06);
+      transition: transform 0.35s ease;
     }
 
     .nav-logo { height: 84px; transition: opacity 0.3s ease; }
@@ -145,8 +146,9 @@
     /* ── HERO ── */
     .hero {
       position: relative;
-      height: 100vh;
-      min-height: 600px;
+      height: calc(100vh - 112px);
+      min-height: 500px;
+      margin-top: 112px;
       overflow: hidden;
       display: flex;
       align-items: flex-end;
@@ -757,7 +759,7 @@
   </nav>
 
   <section class="hero">
-    <img src="images/hero-banner-06.png" alt="Bodytreat — handcrafted New Zealand body oils">
+    <video autoplay muted loop playsinline><source src="images/hero-banner-06.mp4" type="video/mp4"></video>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-eyebrow">Handcrafted in New Zealand</p>
@@ -1033,6 +1035,20 @@
     }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(el => observer.observe(el));
     setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 1200);
+
+    (function() {
+      const nav = document.querySelector('nav');
+      let lastY = 0;
+      window.addEventListener('scroll', function() {
+        const y = window.scrollY;
+        if (y > lastY && y > 80) {
+          nav.style.transform = 'translateY(-100%)';
+        } else {
+          nav.style.transform = '';
+        }
+        lastY = y;
+      }, { passive: true });
+    })();
   </script>
   <script src="/cart.js"></script>
 </body>
