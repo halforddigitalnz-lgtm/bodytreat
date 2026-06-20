@@ -372,12 +372,22 @@
     }, { passive: true });
   }
 
+  function initVideoLoop() {
+    document.querySelectorAll('video').forEach(function (v) {
+      v.addEventListener('ended', function () {
+        v.currentTime = 0;
+        v.play().catch(function () {});
+      });
+    });
+  }
+
   function init() {
     injectStyles();
     injectCartButton();
     injectCartDrawer();
     renderCart();
     initScrollNav();
+    initVideoLoop();
   }
 
   if (document.readyState === 'loading') {
