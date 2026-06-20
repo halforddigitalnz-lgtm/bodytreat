@@ -366,6 +366,11 @@
             nav.classList.add('nav-hidden');
           } else {
             nav.classList.remove('nav-hidden');
+            // If transparent hero-nav is reappearing past the top, switch it white immediately
+            if (nav.classList.contains('hero-nav') && currentY > 60) {
+              nav.classList.remove('hero-nav');
+              nav.classList.add('scrolled');
+            }
           }
         }
 

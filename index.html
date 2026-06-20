@@ -1035,15 +1035,22 @@
 
   <script>
     const navbar = document.getElementById('navbar');
+    let lastHeroScrollY = window.scrollY;
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 60) {
-        navbar.classList.add('scrolled');
-        navbar.classList.remove('hero-nav');
-      } else {
+      const currentY = window.scrollY;
+      const scrollingUp = currentY < lastHeroScrollY;
+      if (currentY <= 60) {
+        // Back at top — always transparent
         navbar.classList.remove('scrolled');
         navbar.classList.add('hero-nav');
+      } else if (scrollingUp) {
+        // Scrolling up past hero — show white
+        navbar.classList.add('scrolled');
+        navbar.classList.remove('hero-nav');
       }
-    });
+      // Scrolling down past 60px: don't change — let nav hide cleanly without turning white
+      lastHeroScrollY = currentY;
+    }, { passive: true });
 
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
