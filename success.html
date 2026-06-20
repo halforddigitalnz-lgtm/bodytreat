@@ -159,11 +159,47 @@
   </footer>
 
   <script>
-    // Clear cart on successful order — runs before cart.js DOMContentLoaded so badge shows 0
     localStorage.removeItem('bodytreat_cart');
     function toggleMenu() { document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
     function closeMenu() { document.getElementById('hamburger').classList.remove('open'); document.getElementById('mobileMenu').classList.remove('open'); }
   </script>
+  <script src="/analytics.js"></script>
   <script src="/cart.js"></script>
+  <script>
+    // Fire Purchase events using the pending cart saved before Stripe redirect
+    (function() {
+      try {
+        var pending = JSON.parse(localStorage.getItem('bt_pending_cart') || 'null');
+        if (!pending) return;
+        localStorage.removeItem('bt_pending_cart');
+
+        var fire = function() {
+          if (pending.email && window._btKlaviyo) {
+            window._btKlaviyo.identify(pending.email);
+            window._btKlaviyo.track('Placed Order', {
+              Items: pending.items.map(function(i){ return { ProductName: i.name, ProductID: i.slug, Value: parseFloat(i.price), Quantity: i.quantity }; }),
+              Value: pending.total,
+              Currency: 'NZD'
+            });
+          }
+          if (window._btPixel) {
+            window._btPixel.purchase({
+              value: pending.total,
+              currency: 'NZD',
+              content_ids: pending.items.map(function(i){ return i.slug; }),
+              content_type: 'product',
+              num_items: pending.items.reduce(function(s, i){ return s + i.quantity; }, 0)
+            });
+          }
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function(){ setTimeout(fire, 400); });
+        } else {
+          setTimeout(fire, 400);
+        }
+      } catch(e){}
+    })();
+  </script>
 </body>
 </html>

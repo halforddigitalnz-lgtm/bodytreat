@@ -44,6 +44,10 @@
     renderCart();
     openCart();
 
+    // Analytics
+    if (window._btPixel) window._btPixel.addToCart({ content_ids: [slug], content_name: name, value: parseFloat(price) || 0, currency: 'NZD', content_type: 'product' });
+    if (window._btKlaviyo) window._btKlaviyo.track('Added to Cart', { ProductName: name, ProductID: slug, Value: parseFloat(price) || 0, Currency: 'NZD' });
+
     // Brief button feedback
     var orig = el.textContent;
     el.textContent = 'Added';
@@ -162,12 +166,31 @@
     var btn = document.getElementById('cart-checkout-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'Redirecting…'; }
 
+    // Capture optional email
+    var emailInput = document.getElementById('cart-email-input');
+    var email = (emailInput && emailInput.value.trim()) || '';
+    try { if (!email) email = localStorage.getItem('bt_email') || ''; } catch(e){}
+
+    // Store pending cart so success.html can fire Purchase events
+    try {
+      var total = cartTotal(cart);
+      localStorage.setItem('bt_pending_cart', JSON.stringify({ items: cart, total: total, email: email }));
+    } catch(e){}
+
+    // Analytics
+    if (email && window._btKlaviyo) {
+      window._btKlaviyo.identify(email);
+      window._btKlaviyo.track('Started Checkout', { Items: cart.map(function(i){ return { ProductName: i.name, ProductID: i.slug, Value: parseFloat(i.price), Quantity: i.quantity }; }), Value: cartTotal(cart), Currency: 'NZD' });
+    }
+    if (window._btPixel) window._btPixel.initCheckout({ value: cartTotal(cart), currency: 'NZD', num_items: cartCount(cart) });
+
     try {
       var res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cart.map(function (i) { return { slug: i.slug, quantity: i.quantity }; })
+          items: cart.map(function (i) { return { slug: i.slug, quantity: i.quantity }; }),
+          email: email || undefined,
         }),
       });
 
@@ -241,6 +264,11 @@
       '#cart-checkout-btn{width:100%;background:#2C1A14;color:#FFFCFB;font-family:"Jost",sans-serif;font-size:11px;font-weight:400;letter-spacing:0.22em;text-transform:uppercase;border:none;padding:17px 24px;cursor:pointer;transition:background 0.3s ease,transform 0.15s ease}',
       '#cart-checkout-btn:hover:not(:disabled){background:#3D2218;transform:translateY(-1px)}',
       '#cart-checkout-btn:disabled{opacity:0.6;cursor:not-allowed}',
+      '.cart-email-wrap{margin-bottom:14px}',
+      '.cart-email-label{font-family:"Jost",sans-serif;font-size:10px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:#7A5850;display:block;margin-bottom:6px}',
+      '#cart-email-input{width:100%;border:1px solid #E8D4CE;background:#FFFCFB;padding:11px 14px;font-family:"Jost",sans-serif;font-size:13px;font-weight:300;color:#2C1A14;outline:none;transition:border-color 0.2s ease;border-radius:0;-webkit-appearance:none;box-sizing:border-box}',
+      '#cart-email-input::placeholder{color:#C4AFAB}',
+      '#cart-email-input:focus{border-color:#C4897A}',
 
       '/* Nav cart button */',
       '#nav-right-group{display:flex;align-items:center;gap:16px}',
@@ -335,11 +363,23 @@
           '<span id="cart-total">$0.00 NZD</span>' +
         '</div>' +
         '<p class="cart-free-ship">Free shipping throughout New Zealand</p>' +
+        '<div class="cart-email-wrap">' +
+          '<label class="cart-email-label" for="cart-email-input">Email for order updates</label>' +
+          '<input id="cart-email-input" type="email" placeholder="your@email.com" autocomplete="email">' +
+        '</div>' +
         '<button id="cart-checkout-btn" onclick="window._btCart.checkout()">Checkout</button>' +
       '</div>';
 
     document.body.appendChild(overlay);
     document.body.appendChild(drawer);
+
+    // Identify to Klaviyo as soon as user types their email
+    document.addEventListener('blur', function(e) {
+      if (e.target && e.target.id === 'cart-email-input') {
+        var email = e.target.value.trim();
+        if (email && window._btKlaviyo) window._btKlaviyo.identify(email);
+      }
+    }, true);
   }
 
   // ── Init ─────────────────────────────────────────────────────────────────────

@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
       ? req.body
       : JSON.parse(req.body);
 
-    const { items } = body;
+    const { items, email } = body;
 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty' });
@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
       };
     }));
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams = {
       mode: 'payment',
       line_items,
       success_url: `${req.headers.origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
@@ -53,7 +53,11 @@ module.exports = async (req, res) => {
       shipping_address_collection: {
         allowed_countries: ['NZ'],
       },
-    });
+    };
+    if (email && typeof email === 'string' && email.includes('@')) {
+      sessionParams.customer_email = email.trim().toLowerCase();
+    }
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     res.status(200).json({ url: session.url });
   } catch (err) {
