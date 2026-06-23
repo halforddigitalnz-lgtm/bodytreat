@@ -269,7 +269,7 @@
   // ================================================================
   function init() {
     showConsentBanner();
-    initNewsletter();
+    // initNewsletter(); // disabled until Klaviyo is configured
     if (hasConsent()) setTimeout(fireViewContent, 600);
   }
 
