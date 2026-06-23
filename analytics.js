@@ -132,7 +132,7 @@
     el.id = 'bt-cb';
     el.innerHTML =
       '<div class="bt-cb-wrap">' +
-        '<p class="bt-cb-txt">We use cookies, including the <strong>Meta Pixel</strong>, to personalise your experience and show you relevant ads on Facebook and Instagram. ' +
+        '<p class="bt-cb-txt">We use cookies to personalise your experience and show you relevant ads. ' +
         'By clicking "Accept all" you consent to this use. See our <a href="/terms.html#cookies">Cookie Policy</a> for details.</p>' +
         '<div class="bt-cb-btns">' +
           '<button class="bt-cb-btn bt-cb-yes" id="bt-cb-yes">Accept all</button>' +
