@@ -280,10 +280,6 @@
       '/* Fix button reset for product buy buttons */',
       'button.product-buy-btn{border:none;cursor:pointer;width:100%}',
 
-      '/* Keep Shop Now text white on hover */',
-      '.nav-links .nav-cta:hover{color:#FFFCFB!important}',
-      '.nav-links .nav-cta::after{display:none}',
-
       '/* Hide-on-scroll nav */',
       'nav{transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),padding 0.4s ease!important}',
       'nav.nav-hidden{transform:translateY(-100%)!important}',
@@ -302,15 +298,6 @@
     var nav = document.querySelector('nav');
     if (!nav) return;
 
-    // Move "Shop Now" button into the nav-links list so it sits beside the other items
-    var navCta = nav.querySelector('.nav-cta');
-    var navLinks = nav.querySelector('.nav-links');
-    if (navCta && navLinks) {
-      var li = document.createElement('li');
-      li.appendChild(navCta);
-      navLinks.appendChild(li);
-    }
-
     var btn = document.createElement('button');
     btn.id = 'cart-btn';
     btn.setAttribute('aria-label', 'Open cart');
@@ -324,9 +311,8 @@
     btn.onclick = openCart;
 
     // Group cart + hamburger as a single rightmost flex item.
-    // Desktop: hamburger hidden → only cart shows.
-    // Mobile: nav-links + nav-cta hidden → nav has 2 items (logo | group),
-    // so space-between puts group at far right, not stranded in the middle.
+    // Shop Now stays in its original position — moving it into nav-links
+    // breaks the flex spacing and button styling.
     var hamburger = nav.querySelector('.hamburger');
     if (hamburger) {
       var group = document.createElement('div');
