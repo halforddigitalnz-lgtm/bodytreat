@@ -9,7 +9,7 @@
   'use strict';
 
   // ── CONFIG ────────────────────────────────────────────────────────
-  var PIXEL_ID      = 'YOUR_META_PIXEL_ID';       // Meta Business Manager → Events Manager → Create Pixel
+  var PIXEL_ID      = '991200990454124';
   var KL_PUBLIC_KEY = 'YOUR_KLAVIYO_PUBLIC_KEY';  // Klaviyo → Settings → API Keys → Public API Key
   var KL_LIST_ID    = 'YOUR_KLAVIYO_LIST_ID';     // Klaviyo → Lists & Segments → your list → List ID
   // ─────────────────────────────────────────────────────────────────
