@@ -25,6 +25,30 @@
   // ================================================================
   // META PIXEL
   // ================================================================
+  function getPageSlug() {
+    var p = window.location.pathname.replace(/^\//, '').replace(/\.html$/, '') || 'index';
+    var map = {
+      'index':              'home',
+      'products':           'shop',
+      'about':              'about',
+      'stockists':          'stockists',
+      'contact':            'contact',
+      'shipping':           'shipping',
+      'terms':              'terms',
+      'success':            'order-confirmed',
+      'cancel':             'order-cancelled',
+      'product-aches-pains':    'product-aches-and-pains',
+      'product-bio-retinol':    'product-bio-retinol',
+      'product-calm-relax':     'product-calm-and-relax',
+      'product-dry-skin':       'product-dry-skin',
+      'product-gift-set':       'product-gift-set',
+      'product-soothe-sleep':   'product-soothe-and-sleep',
+      'product-uplifting':      'product-uplifting',
+      'product-womens-hormone': 'product-womens-hormone',
+    };
+    return map[p] || p;
+  }
+
   function loadPixel() {
     if (window._btPixelLoaded || PIXEL_ID === 'YOUR_META_PIXEL_ID') return;
     window._btPixelLoaded = true;
@@ -36,7 +60,7 @@
     (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     /* jshint ignore:end */
     fbq('init', PIXEL_ID);
-    fbq('track', 'PageView');
+    fbq('track', 'PageView', { content_name: getPageSlug() });
   }
 
   // Public API — called by cart.js and success.html
