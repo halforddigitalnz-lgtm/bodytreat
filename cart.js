@@ -280,6 +280,10 @@
       '/* Fix button reset for product buy buttons */',
       'button.product-buy-btn{border:none;cursor:pointer;width:100%}',
 
+      '/* Keyboard focus */',
+      '#cart-btn:focus-visible,.cart-close:focus-visible,.cart-qty-btn:focus-visible,.cart-item-remove:focus-visible,#cart-checkout-btn:focus-visible,.cart-empty a:focus-visible{outline:2px solid #C4897A;outline-offset:3px}',
+      '#cart-email-input:focus-visible{outline:2px solid #C4897A;outline-offset:2px}',
+
       '/* Hide-on-scroll nav */',
       'nav{transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),padding 0.4s ease!important}',
       'nav.nav-hidden{transform:translateY(-100%)!important}',

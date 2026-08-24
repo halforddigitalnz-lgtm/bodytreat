@@ -1,0 +1,65 @@
+/* ================================================================
+   base.css — Bodytreat shared design tokens & site-wide primitives
+   Loaded before each page's inline <style>, so page rules win.
+   ================================================================ */
+
+:root {
+  --white:      #FFFCFB;
+  --linen:      #FEF7F4;
+  --blush:      #F8EDE8;
+  --petal:      #EEDDD6;
+  --rose:       #C4897A;
+  --rose-dark:  #A86D5F;
+  --rose-pale:  #EAC5BB;
+  --bark:       #2C1A14;
+  --earth:      #3D2218;
+  --mist:       #7A5850;
+  --border:     #E8D4CE;
+
+  --hero-home: calc(100vh - 112px);
+  --hero-interior: 56vh;
+  --hero-interior-min: 380px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --hero-interior: 46vh;
+    --hero-interior-min: 320px;
+  }
+}
+
+/* ── Keyboard focus ── */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+[tabindex]:focus {
+  outline: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 3px;
+}
+
+/* ── Footer ── */
+.footer-credit {
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+.footer-credit:hover,
+.footer-credit:focus-visible {
+  opacity: 0.8;
+}
+
+.footer-nz svg {
+  display: block;
+  flex-shrink: 0;
+}

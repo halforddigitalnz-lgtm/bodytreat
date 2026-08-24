@@ -149,6 +149,7 @@
       '.bt-cb-yes:hover{background:#A86D5F}' +
       '.bt-cb-no{background:transparent;color:rgba(255,252,251,0.42);border:1px solid rgba(255,252,251,0.15)}' +
       '.bt-cb-no:hover{color:rgba(255,252,251,0.75)}' +
+      '.bt-cb-btn:focus-visible,.bt-cb-txt a:focus-visible{outline:2px solid #EAC5BB;outline-offset:3px}' +
       '@media(max-width:600px){#bt-cb{padding:14px 20px}}';
     document.head.appendChild(css);
 
@@ -215,6 +216,8 @@
       '#bt-nl-s:disabled{opacity:0.55;cursor:not-allowed}' +
       '.bt-nl-note{font-family:"Jost",sans-serif;font-size:10px;font-weight:300;color:#C4AFAB;letter-spacing:0.04em;margin-top:2px}' +
       '.bt-nl-ok{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:300;color:#2C1A14;padding:16px 0;display:block}' +
+      '#bt-nl-x:focus-visible,#bt-nl-s:focus-visible{outline:2px solid #C4897A;outline-offset:3px}' +
+      '#bt-nl-e:focus-visible{outline:2px solid #C4897A;outline-offset:2px}' +
       '@media(max-width:480px){#bt-nl-box{padding:40px 24px 32px}}';
     document.head.appendChild(css);
 
@@ -264,7 +267,7 @@
         try { localStorage.setItem(LS_EMAIL, email); } catch(ex){}
         window._btKlaviyo.identify(email);
         var form = document.getElementById('bt-nl-f');
-        if (form) form.innerHTML = '<span class="bt-nl-ok">Thank you — welcome to the ritual ✶</span>';
+        if (form) form.innerHTML = '<span class="bt-nl-ok">Thank you — welcome to the ritual</span>';
         setTimeout(function(){ closeNl('subscribed'); }, 2200);
       }
 

@@ -8,23 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/base.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --white:      #FFFCFB;
-      --linen:      #FEF7F4;
-      --blush:      #F8EDE8;
-      --petal:      #EEDDD6;
-      --rose:       #C4897A;
-      --rose-dark:  #A86D5F;
-      --rose-pale:  #EAC5BB;
-      --gold:       #B8924A;
-      --bark:       #2C1A14;
-      --earth:      #3D2218;
-      --mist:       #7A5850;
-      --border:     #E8D4CE;
-    }
 
     html { scroll-behavior: smooth; }
     body {
@@ -92,7 +79,7 @@
     /* HERO */
     .page-hero {
       position: relative;
-      height: 65vh; min-height: 440px;
+      height: var(--hero-interior); min-height: var(--hero-interior-min);
       margin-top: 112px;
       overflow: hidden;
       display: flex; align-items: flex-end;
@@ -379,7 +366,7 @@
     /* FOOTER */
     footer { background: var(--bark); padding: 68px 80px 44px; }
     .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 56px; padding-bottom: 52px; border-bottom: 1px solid rgba(255,252,251,0.08); }
-    .footer-logo { height: 48px; margin-bottom: 18px; filter: brightness(0) invert(1); opacity: 0.85; }
+    .footer-logo { height: 48px; margin-bottom: 18px; opacity: 0.85; }
     .footer-tagline { font-size: 13px; font-weight: 300; line-height: 1.8; color: rgba(255,252,251,0.45); margin-bottom: 22px; }
     .footer-social { display: flex; gap: 12px; }
     .social-link { width: 34px; height: 34px; border: 1px solid rgba(255,252,251,0.12); display: flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 1px; transition: background 0.3s ease; }
@@ -416,7 +403,6 @@
       nav { padding: 14px 24px; }
       .nav-links, .nav-cta { display: none; }
       .hamburger { display: flex; }
-      .page-hero { height: 55vh; min-height: 360px; }
       .page-hero-content { padding: 0 24px 48px; }
       .intro-section { padding: 48px 24px; }
       .timeline-section { padding: 64px 24px; }
@@ -435,6 +421,23 @@
     @media (max-width: 480px) {
       .qual-grid { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; }
+    }
+
+    /* Suppress WebKit's native playback overlay (shown when autoplay is blocked,
+       e.g. iOS Low Power Mode or in-app browsers) — these are decorative videos. */
+    video::-webkit-media-controls,
+    video::-webkit-media-controls-enclosure,
+    video::-webkit-media-controls-panel,
+    video::-webkit-media-controls-play-button,
+    video::-webkit-media-controls-overlay-play-button,
+    video::-webkit-media-controls-start-playback-button {
+      display: none !important;
+      -webkit-appearance: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+    video[autoplay] {
+      pointer-events: none;
     }
   </style>
 </head>
@@ -460,7 +463,7 @@
 
   <!-- Hero -->
   <section class="page-hero">
-    <video autoplay muted loop playsinline><source src="images/about-us-banner-06.mp4" type="video/mp4"></video>
+    <video autoplay muted loop playsinline preload="auto" tabindex="-1" aria-hidden="true" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny"><source src="images/about-us-banner-06.mp4" type="video/mp4"></video>
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <span class="page-eyebrow">Our Story</span>
@@ -601,7 +604,7 @@
 
   <!-- Wholesale -->
   <section class="wholesale-section" id="wholesale">
-    <video class="wholesale-video" autoplay muted loop playsinline><source src="images/stockists-banner-06-V3.mp4" type="video/mp4"></video>
+    <video class="wholesale-video" autoplay muted loop playsinline preload="auto" tabindex="-1" aria-hidden="true" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny"><source src="images/stockists-banner-06-V3.mp4" type="video/mp4"></video>
     <div class="wholesale-overlay"></div>
     <div class="reveal">
       <span class="wholesale-label">For Stockists</span>
@@ -623,7 +626,7 @@
   <footer>
     <div class="footer-top">
       <div>
-        <img src="images/logo/logo-default.png" alt="Bodytreat" class="footer-logo">
+        <img src="images/logo/logo-white.png" alt="Bodytreat" class="footer-logo">
         <p class="footer-tagline">Handcrafted aromatherapy body oils made with love in the Tasman region, New Zealand.</p>
         <div class="footer-social">
           <a href="https://www.instagram.com/lovebodytreat/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
@@ -658,7 +661,7 @@
     </div>
     <div class="footer-bottom">
       <p class="footer-copy">&copy; 2026 Bodytreat. All rights reserved.</p>
-      <div class="footer-nz"><span>🇳🇿</span><span>Made in New Zealand</span></div>
+      <div class="footer-nz"><svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><path d="M5 0 6.1 3.9 10 5 6.1 6.1 5 10 3.9 6.1 0 5 3.9 3.9Z"/></svg><span>Made in New Zealand</span></div>
     </div>
   </footer>
 
@@ -674,21 +677,33 @@
     revealEls.forEach(el => observer.observe(el));
     setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 1200);
 
-    (function() {
-      const nav = document.querySelector('nav');
-      let lastY = 0;
-      window.addEventListener('scroll', function() {
-        const y = window.scrollY;
-        if (y > lastY && y > 80) {
-          nav.style.transform = 'translateY(-100%)';
-        } else {
-          nav.style.transform = '';
-        }
-        lastY = y;
-      }, { passive: true });
-    })();
   </script>
   <script src="/analytics.js"></script>
   <script src="/cart.js"></script>
+  <script>
+    // Decorative banner videos: keep them playing and never surface a play control.
+    (function () {
+      var videos = document.querySelectorAll('video[autoplay]');
+      if (!videos.length) return;
+
+      function play() {
+        videos.forEach(function (v) {
+          v.controls = false;
+          if (v.paused) {
+            var p = v.play();
+            if (p && p.catch) p.catch(function () {});
+          }
+        });
+      }
+
+      play();
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) play();
+      });
+      ['touchstart', 'click', 'scroll'].forEach(function (evt) {
+        document.addEventListener(evt, play, { once: true, passive: true });
+      });
+    })();
+  </script>
 </body>
 </html>
