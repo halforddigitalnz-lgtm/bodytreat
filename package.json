@@ -4,5 +4,8 @@
   "private": true,
   "dependencies": {
     "stripe": "^14.0.0"
+  },
+  "devDependencies": {
+    "puppeteer": "^25.8.0"
   }
 }
